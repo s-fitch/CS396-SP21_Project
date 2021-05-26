@@ -95,6 +95,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GenericError'
+        403:
+          description: Invalid login credentials
   /account/refresh:
     post:
       tags:
