@@ -1,2 +1,2 @@
-# Word Documents
-*.docx
+# Private .env file
+.env
