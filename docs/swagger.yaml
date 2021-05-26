@@ -216,17 +216,13 @@ paths:
         content:
           application/json:
             schema:
-              required:
-              - name
               type: object
               properties:
                 name:
                   type: string
                 description:
                   type: string
-                image_url_profile:
-                  type: string
-                image_url_banner:
+                moderators:
                   type: string
         required: true
       responses:
@@ -381,6 +377,21 @@ paths:
       operationId: questionPOST
       parameters:
       - $ref: '#/components/parameters/community_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - title
+              - body
+              properties:
+                title:
+                  type: string
+                  description: Short title of the question
+                body:
+                  type: string
+                  description: Full content of the question
       responses:
         200:
           description: Successfully posted question to community
@@ -682,6 +693,7 @@ components:
       required:
       - _id
       - moderators
+      - description
       - name
       type: object
       properties:
@@ -692,19 +704,11 @@ components:
         name:
           type: string
           description: Display name of the group
-          example: Northwestern University
+          example: Evanston Birdwatchers
         description:
           type: string
           description: Description of the group
-          example: We cover questions relating to Northwestern prospective, current, and former students, as well as faculty and staff.
-        image_url_profile:
-          type: string
-          description: Profile image of the group
-          example: https://common.northwestern.edu/v8/css/images/northwestern-thumb.jpg
-        image_url_banner:
-          type: string
-          description: Banner image of the group
-          example: https://www.northwestern.edu/images/our-places.jpg
+          example: We cover all questions related to birdwatching in the Evanston area.
         moderators:
           type: array
           description: List of moderators that can make changes to the group information
