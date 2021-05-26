@@ -782,10 +782,10 @@ components:
           type: integer
           description: |
             General cateogry report falls under:
+              * `0` - Other
               * `1` - Hateful or abusive
               * `2` - Dangerous or harmful
               * `3` - Spam or misleading
-              * `4` - Other
         detail:
           type: string
           description: Specific reasoning from the reporting user about the reported
