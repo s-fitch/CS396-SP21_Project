@@ -120,6 +120,29 @@ paths:
         401:
           description: Refresh token is invalid or missing
           content: {}
+  
+  /account/feed:
+    get:
+      tags:
+      - account
+      summary: Get feed of joined communities
+      operationId: accountFEED
+      responses:
+        200:
+          description: Successfully retreived community feed for user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  communites:
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/Community'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - accountAuth: []    
       
       
   /c:
@@ -247,41 +270,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Search'
-  /c/feed:
-    get:
-      tags:
-      - community
-      summary: Get feed of subscribed communities
-      operationId: communityFEED
-      responses:
-        200:
-          description: Successfully retreived community feed for user
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  communites:
-                    type: array
-                    items: 
-                      $ref: '#/components/schemas/Community'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-      security:
-      - accountAuth: []
-  /c/{community_id}/subscribe:
+  /c/{community_id}/join:
     post:
       tags:
       - community
-      summary: Subscribe to a community
-      description: Once a user subscribes to a community, this community will show
+      summary: Join a community
+      description: Once a user joins a community, this community will show
         up in their personal feed.
       operationId: communityJOIN
       parameters:
       - $ref: '#/components/parameters/community_id'
       responses:
         204:
-          description: Successfully subscribed to community
+          description: Successfully joined community
           content: {}
         401:
           $ref: '#/components/responses/Unauthorized'
