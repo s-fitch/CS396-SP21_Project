@@ -16,47 +16,50 @@ In this design, the backend is implemented with a monolothic design, wherein all
 ### **MongoDB Databases**
 All of the account, community, question, and answer information for the service will be stored in MongoDB databases like those we used in prior asignments. The schema for each type of entry is shown below. On top of the implicit partitioning provided by Mongo's NoSQL structure, the Community, Question, and Answer entries could be manually partitioned based on the community they belong to in order to increase scalability.
 #### **Account Database**
-```JSON
+```JS
 {
-    _id: "string",
-    email: "string",
-    password: "string",
-    communities: ["string", ...]
+    _id: "string",                  // Unique Account Id
+    email: "string",                // Unique email for the account
+    password: "string",             // Hash of the account password
+    communities: ["string", ...]    // Community IDs user has joined
+    upvotes: ["string", ...]        // Answer IDs user has upvoted
+    downvotes: ["string", ...]      // Answer IDs user has downvoted
+
 }
 ```
 #### **Community Database**
-```JSON
+```JS
 {
-    _id: "string",
-    name: "string",
-    description: "string",
-    image_url_profile: "string",
-    image_url_banner: "string", 
-    moderators: ["string", ...]
+    _id: "string",                  // Unique Community ID
+    name: "string",                 // Short name of Community
+    description: "string",          // Full description of Community
+    image_url_profile: "string",    // Profile image for Community
+    image_url_banner: "string",     // Banner image for Community
+    moderators: ["string", ...]     // List of Account IDs of moderators
 }
 ```
 #### **Question Database**
-```JSON
+```JS
 {
-    _id: "string",
-    community: "string",
-    author: "string",
-    time: integer,
-    title: "string",
-    body: "string"
+    _id: "string",          // Unique Question ID
+    community: "string",    // Community that the question belongs to
+    author: "string",       // Author of the question (only for internal use)
+    time: integer,          // Epoch time the question was posted
+    title: "string",        // Short title of the question
+    body: "string"          // Full content of the question
 }
 ```
 #### **Answer Database**
-```JSON
+```JS
 {
-    _id: "string",
-    community: "string",
-    question: "string",
-    author: "string",
-    time: integer,
-    body: "string",
-    upvotes: ["string", ...],
-    downvotes: ["string", ...]
+    _id: "string",              // Unique Answer Id
+    community: "string",        // Community that the answer belongs to
+    question: "string",         // Question that the answer belongs to
+    author: "string",           // Author of the answer (only for internal use)
+    time: integer,              // Epoch time the question was posted
+    body: "string",             // Content of the answer
+    score: integer              // Cummulative score of the question, which is upvotes-downvotes     
+    
     
 }
 ```
