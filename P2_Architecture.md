@@ -1,6 +1,3 @@
-Name: Spencer Fitch \
-Netid: slf0232
-
 # **Project Checkpoint 1: Architecture Specification**
 This document outlines the full specification and architecture of ***Community Q's***, a web application that enables people to form various question-and-answer communities about whatever topics they are interested in. This application works similar to existing Q&A platforms like Piazza and Campuswire but differs in that Community Q's is not solely academic based. Users are free to create, search, and join any community they have an interest in without needing to register through a school or keep their topics academic focused.
 
