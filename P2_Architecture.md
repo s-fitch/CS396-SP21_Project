@@ -5,9 +5,9 @@ Netid: slf0232
 This document outlines the full specification and architecutre of ***Community Q's***, a web application that enables people to form various question-and-answer communities about whatever topics they are interested in. This application works similar to existing Q&A platforms like Piazza and Campuswire, but differs in that Community Q's is not solely academic based. User's are free to create, search, and join any community they have an interest in without needing to register through a school or keep their topics academic focused. 
 
 ## **User Interface**
-![Community Q's user interface]()
+![Community Q's user interface](https://github.com/s-fitch/CS396-SP21_Project/blob/main/images/P2_ArchitectureDiagram.jpg)
 ## **Architecture Diagram**
-![Community Q's system architecture diagram]()
+![Community Q's system architecture diagram](https://github.com/s-fitch/CS396-SP21_Project/blob/main/images/P2_UserInterface.jpg)
 ## **Architecture Components**
 ### **Client Application**
 The client will interact with the service through a React web application hosted on S3. 
