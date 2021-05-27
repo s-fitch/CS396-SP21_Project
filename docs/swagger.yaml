@@ -5,6 +5,8 @@ info:
     if a question is reported.
   version: 1.0.0
 tags:
+- name: website
+  description: Basic paths for the website
 - name: account
   description: User account creation and management
 - name: community
@@ -16,6 +18,21 @@ tags:
   
   
 paths:
+  /:
+    get:
+      tags:
+      - website
+      summary: Retreive base React web page
+      operationId: webpageGET
+      responses:
+        200:
+          description: Successfully retreived React web page
+          content:
+            application/React:
+              schema:
+                type: string
+                format: binary
+                description: Full React application used to interact with the service
   /account:
     post:
       tags:

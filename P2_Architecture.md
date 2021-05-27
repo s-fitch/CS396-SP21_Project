@@ -10,7 +10,7 @@ This document outlines the full specification and architecutre of ***Community Q
 ![Community Q's system architecture diagram](https://github.com/s-fitch/CS396-SP21_Project/blob/main/images/P2_UserInterface.jpg)
 ## **Architecture Components**
 ### **Client Application**
-The client will interact with the service through a React web application hosted on S3. 
+The client will interact with the service through a React web application hosted on S3 that is delivered to the client through the "*/*" endpoint on the website.
 ### **Node.js Backend**
 In this design, the backend is implemented with a monolothic design, wherein all of the endpoints are handled by one server instance program. The architecture diagram shows many of these instances running in parallel behind an AWS Elastic Beanstalk load balancer in order to increase scalability. Though it currently uses a monolithic design for simplicity, the API endpoints of this backend were designed such that it could be converted to a more scalable microservice API at a later date. The Swagger API specification for this backend is available the website associated with this github repo: https://s-fitch.github.io/CS396-SP21_Project/.
 ### **MongoDB Databases**
