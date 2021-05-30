@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Community Q's backend server",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s-fitch/CS396-SP21_Project.git"
+  },
+  "author": "Spencer Fitch",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/s-fitch/CS396-SP21_Project/issues"
+  },
+  "homepage": "https://github.com/s-fitch/CS396-SP21_Project#readme",
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7"
+  }
+}
