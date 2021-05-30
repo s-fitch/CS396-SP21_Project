@@ -19,6 +19,16 @@ app.use(middleware.cors);
 const config = require("./config/config")[env || "development"];
 const mongoose = require("mongoose");
 
+console.log("Trying to connect to database...");
+mongoose.connect(config.database, config.mongoConfig, err => {
+    if (err) {
+        console.log("Could not connect to database.");
+        console.log(err);
+    } else {
+        console.log(`Connected to ${process.env.DB_NAME}.`);
+    }
+});
+
 const routes = require("./src/routes");
 app.use("", routes);
 
