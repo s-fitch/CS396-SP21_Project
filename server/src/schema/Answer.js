@@ -32,7 +32,7 @@ const AnswerSchema = new Schema({
     }
 });
 
-QuestionSchema.statics.create = function(obj) {
+AnswerSchema.statics.create = function(obj) {
     const Answer = mongoose.model("Answer", AnswerSchema);
     const answer = new Answer();
     answer.community = obj.community;

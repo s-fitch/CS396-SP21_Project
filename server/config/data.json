@@ -1,0 +1,56 @@
+{
+    "accounts": [
+        {
+            "_id": "6075029f746e3f38a5f0e946",
+            "email": "admin@test.com",
+            "password": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+            "upvotes": [],
+            "downvotes": []
+        },
+        {
+            "_id": "6075029f746e3f38a5f0e947",
+            "email": "user1@test.com",
+            "password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+            "upvotes": ["6075029f746e3f38a5f0e94b"],
+            "downvotes": ["6075029f746e3f38a5f0e94a"]
+        }
+    ],
+    "communities": [
+        {
+            "_id": "6075029f746e3f38a5f0e948",
+            "name": "Test Community",
+            "description": "This is just used for testing. If you're seeing this, I did something wrong.",
+            "moderators": ["6075029f746e3f38a5f0e947"]
+        }
+    ],
+    "questions": [
+        {
+            "_id": "6075029f746e3f38a5f0e949",
+            "community": "6075029f746e3f38a5f0e948",
+            "author": "6075029f746e3f38a5f0e946",
+            "time": 1622352879000,
+            "title": "Question Title",
+            "body": "Is this a good question body? I hope so but it's my first one so I'm not super confident."
+        }
+    ],
+    "answers": [
+        {
+            "_id": "6075029f746e3f38a5f0e94a",
+            "community": "6075029f746e3f38a5f0e948",
+            "question": "6075029f746e3f38a5f0e949",
+            "author": "6075029f746e3f38a5f0e946",
+            "time": 1622353227000,
+            "body": "I'm just gonna answer my own question: yes, it is a good question body.",
+            "score": -1
+        },
+        {
+            "_id": "6075029f746e3f38a5f0e94b",
+            "community": "6075029f746e3f38a5f0e948",
+            "question": "6075029f746e3f38a5f0e949",
+            "author": "6075029f746e3f38a5f0e947",
+            "time": 1622353303000,
+            "body": "No it's a horrible question and you should feel bad.",
+            "score": 1
+        }
+    ]
+}
