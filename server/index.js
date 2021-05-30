@@ -16,6 +16,9 @@ app.use(express.json(bodyConfig));
 const middleware = require("./config/middleware");
 app.use(middleware.cors);
 
+const config = require("./config/config")[env || "development"];
+const mongoose = require("mongoose");
+
 const routes = require("./src/routes");
 app.use("", routes);
 
