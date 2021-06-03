@@ -22,7 +22,7 @@ const AnswerSchema = new Schema({
         type: Schema.Types.Date,
         required: true
     },
-    body: {
+    content: {
         type: Schema.Types.String,
         required: true
     },

@@ -21,7 +21,7 @@ const QuestionSchema = new Schema({
         type: Schema.Types.String,
         required: true
     },
-    body: {
+    content: {
         type: Schema.Types.String,
         required: true
     }
