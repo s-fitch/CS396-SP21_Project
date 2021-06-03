@@ -180,10 +180,6 @@ paths:
                   type: string
                 description:
                   type: string
-                image_url_profile:
-                  type: string
-                image_url_banner:
-                  type: string
         required: true
       responses:
         200:
