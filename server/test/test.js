@@ -391,7 +391,75 @@ describe('/c/:commId/join', function() {
     })
 })
 
+describe('/c/:commId/q', function() {
+    this.timeout(TIMEOUT);
 
+    this.beforeEach(done => {
+        resetDB(done);
+    })
+
+    describe("POST", () => {
+        it("should create a new question", done => {
+            let expected = JSON.parse(JSON.stringify(utils.mockQuestion));
+            expected.answers = [];
+            expected.community = utils.testCommunity._id;
+
+            axios.post(route(`/c/${utils.testCommunity._id}/q`), utils.mockQuestion, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(201);
+                    expect(simplify(response.data)).to.eql(simplify(expected));
+                    done();
+                })
+                .catch(err => done(err))
+        })
+        it("should error on invalid request body", done => {
+            axios.post(route(`/c/${utils.testCommunity._id}/q`), {foo: "baz"}, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(400);
+                    expect(isError(response.data));
+                    done();
+                })
+                .catch(err => {
+                    (err.response && err.response.status==400) ? done() : done(err);
+                })
+        })
+    })
+})
+
+describe('/c/:commId/q/:quesId', function() {
+    this.timeout(TIMEOUT);
+
+    this.beforeEach(done => {
+        resetDB(done);
+    })
+
+    describe("GET", () => {
+        it("should return question information", done => {
+            const expected = JSON.parse(JSON.stringify(utils.testQuestion));
+            delete expected.author;
+
+            axios.get(route(`/c/${utils.testCommunity._id}/q/${utils.testQuestion._id}`))
+                .then(response => {
+                    expect(response.status).to.equal(200);
+                    expect(simplify(response.data)).to.eql(simplify(expected));
+                    done();
+                })
+                .catch(err => done(err))
+        })
+
+        it("should error on nonexistent question", done => {
+            axios.get(route(`/c/${utils.testCommunity._id}/q/${utils.mockId}`))
+                .then(response => {
+                    expect(response.status).to.equal(404);
+                    expect(isError(response.data)).to.be.true;
+                    done()
+                })
+                .catch(err => {
+                    (err.response && err.response.status == 404) ? done() : done(err);
+                })
+        })
+    })
+})
 
 
 describe('/c/:commId/report', function() {

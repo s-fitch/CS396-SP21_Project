@@ -269,10 +269,11 @@ router.route("/c/:commId/q")
 
         Question.create(question).save()
             .then(data => {
-                delete data['author'];
-                question['answers'] = [];
+                const body = JSON.parse(JSON.stringify(data));
+                delete body.author;
+                body.answers = [];
 
-                res.status(201).send(question);
+                res.status(201).send(body);
                 return;
             })
             .catch(err => {
@@ -284,19 +285,20 @@ router.route("/c/:commId/q")
     });
 
 router.route("/c/:commId/q/:quesId")
-    .get(authenticateToken, existsCommunity, existsQuestion, (req, res) => {
+    .get(existsCommunity, existsQuestion, (req, res) => {
         console.log(`GET /c/${req.params.commId}/q/${req.params.quesId}`);
 
-        const question = req.question;
-        delete question['author'];
+        const question = JSON.parse(JSON.stringify(req.question));
+        delete question.author;
 
-        Answer.find({ question: req.question._id })
+        Answer.find({ question: question._id })
             .sort('score')
             .then(data => {
-                data.forEach(answer => {
-                    delete answer['author']
+                const answers = JSON.parse(JSON.stringify(data));
+                answers.forEach(answer => {
+                    delete answer.author
                 });
-                question['answers'] = data;
+                question.answers = answers;
 
                 res.status(200).send(question);
                 return;

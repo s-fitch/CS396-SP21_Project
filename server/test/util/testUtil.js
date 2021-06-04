@@ -28,7 +28,10 @@ const Utils = function () {
         name: "Testing Community",
         description: "This is a community devoted to testing out the server endpoints. If you're seeing this, congratulations! You got to witness me make some major mistake!"
     };
-    this.mockQuestion = {};
+    this.mockQuestion = {
+        title: "Testing Question",
+        content: "Is this server endpoint working properly?"
+    };
     this.mockAnswer = {};
     this.mockReport = {
         category: 1,
@@ -62,6 +65,8 @@ const Utils = function () {
         const newItem = JSON.parse(JSON.stringify(item));
         delete newItem._id;
         delete newItem.__v;
+        delete newItem.time;
+        delete newItem.answers
         return newItem;
     }
 
