@@ -9,9 +9,13 @@ const utils = require("./routesUtil");
 const Account = require("./schema/Account");
 const Community = require("./schema/Community");
 const Question = require("./schema/Question");
+const Answer = require("./schema/Answer");
+const Report = require("./schema/Report");
 
 const {
-    authenticateToken, existsCommunity
+    authenticateToken, errorBody, error500,
+    existsCommunity, existsQuestion, existsAnswer, 
+    validCommunity, validQuestion, validAnswer, validReport
 } = utils;
 
 const notImplemented = {
@@ -53,12 +57,12 @@ router.route("/account")
         Account.exists({email: body['email']}, (err, doc) => {
             if (err) {
                 console.log(err);
-                res.status(500).send(utils.error500);
+                res.status(500).send(error500);
                 return;
             } else {
                 if (doc) {
                     // Email already in use
-                    res.status(400).send(utils.errorBody(`Email address ${body['email']} is already in use`));
+                    res.status(400).send(errorBody(`Email address ${body['email']} is already in use`));
                     return;
                 }
 
@@ -87,7 +91,7 @@ router.route("/account")
                     })
                     .catch(err => {
                         console.log(err);
-                        res.status(500).send(utils.error500);
+                        res.status(500).send(error500);
                         return;
                     })
                 return;
@@ -139,18 +143,16 @@ router.route("/account/feed")
  *      /c/:id/report   POST
  */
 router.route("/c")
-    .post(authenticateToken, utils.validateCommunity, (req, res) => {
+    .post(authenticateToken, validCommunity, (req, res) => {
         console.log("POST /c");
 
-        Community.create(req.data).save()
+        Community.create(req.body).save()
             .then(data => {
-                console.log(data);
                 res.status(201).send(data);
                 return;
             })
             .catch(err => {
-                console.log(err);
-                res.status(500).send(utils.error500);
+                res.status(500).send(error500);
             })
 
     });
@@ -167,7 +169,6 @@ router.route("/c/:commId")
     .get(existsCommunity, (req, res) => {
         console.log(`GET /c/${req.params.commId}`);
 
-        console.log(req.community);
         res.status(200).send(req.community);
 
     })
@@ -182,35 +183,77 @@ router.route("/c/:commId/feed")
     .get(existsCommunity, (req, res) => {
         console.log(`GET /c/${req.params.commId}/feed`);
 
-        Question.find({community: req.params.commId})
+        Question.find({})
             .sort('time')
             .then(data => {
-                res.status(200).send(data);
+                console.log(data);
+                const body = {
+                    num_returned: data.length,
+                    questions: data
+                }
+                res.status(200).send(body);
             })
             .catch(err => {
-                res.status(500).send(utils.error500);
+                res.status(500).send(error500);
                 })
 
     });
 
 router.route("/c/:commId/join")
-    .post((req, res) => {
+    .post(authenticateToken, existsCommunity, (req, res) => {
         console.log(`POST /c/${req.params.commId}/join`);
 
-        res.status(200).send(notImplemented);
+        Account.findByIdAndUpdate(req.user._id, {
+            $addToSet: { communities: req.community._id }})
+            .then(data => {
+                res.status(204).send();
+                return;
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(error500);
+                return;
+            })
 
     })
-    .delete((req, res) => {
+    .delete(authenticateToken, existsCommunity, (req, res) => {
         console.log(`DELETE /c/${req.params.commId}/join`);
 
-        res.status(200).send(notImplemented);
+        Account.findByIdAndUpdate(req.user._id, {
+            $pull: { communities: req.community._id}})
+            .then(data => {
+                res.status(204).send();
+                return;
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(error500);
+                return;
+            })
     })
 
 router.route("/c/:commId/report")
-    .post((req, res) => {
+    .post(authenticateToken, existsCommunity, validReport, (req, res) => {
         console.log(`POST /c/${req.params.commId}/report`);
 
-        res.status(200).send(notImplemented);
+        const report = {
+            category: req.body.category,
+            detail: req.body.detail,
+            reporter: req.user._id,
+            time: Date.now(),
+            item: req.community
+        }
+
+        Report.create(report).save()
+            .then(response => {
+                res.status(204).send();
+                return;
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(error500);
+                return;
+            })
 
     });
 
@@ -240,7 +283,7 @@ router.route("/c/:commId/q/:quesId")
     });
 
 router.route("/c/:commId/q/:quesId/report")
-    .post((req, res) => {
+    .post(authenticateToken, existsCommunity, existsQuestion, validReport, (req, res) => {
         console.log(`POST /c/${req.params.commId}/q/${req.params.quesId}/report`);
 
         res.status(200).send(notImplemented);

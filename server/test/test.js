@@ -43,6 +43,17 @@ const expect = chai.expect;
 
 const TIMEOUT = 10000;
 
+const validHeader = {
+    headers: {
+        Authorization: 'Bearer ' + utils.access_token
+    }
+}
+const invalidHeader = {
+    headers: {
+        Authorization: 'Bearer ' + utils.expired_token
+    }
+}
+
 describe("/", function () {
     this.timeout(TIMEOUT);
 
@@ -121,18 +132,6 @@ describe("/c",  function() {
     this.beforeEach(done => {
         resetDB(done);
     });
-
-    
-    const validHeader = {
-        headers: {
-            Authorization: 'Bearer ' + utils.access_token
-        }
-    }
-    const invalidHeader = {
-        headers: {
-            Authorization: 'Bearer ' + utils.expired_token
-        }
-    }
 
     describe("POST", () => {
         it("should create a new Community", done => {
@@ -277,6 +276,117 @@ describe('/c/:commId/feed', function() {
                         done(err);
                     }
                 });
+        })
+    })
+})
+
+describe('/c/:commId/join', function() {
+    this.timeout(TIMEOUT);
+
+    this.beforeEach(done => {
+        resetDB(done);
+    })
+
+    describe("POST", () => {
+        it("should add Community to user's list", done => {
+            axios.post(route(`/c/${utils.testCommunity._id}/join`), null, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(204);
+
+                    Account.findById(utils.testAccount._id)
+                        .then(data => {
+                            expect(data.communities).to.include(utils.testCommunity._id);
+                            done();
+                        })
+                        .catch(err => done(err));
+
+                })
+                .catch(err => done(err));
+        })
+
+        it('should not add duplicates to Community list', done => {
+            axios.post(route(`/c/${utils.testCommunity._id}/join`), null, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(204);
+
+                    Account.findById(utils.testAccount._id)
+                        .then(data => {
+                            expect(data.communities).to.include(utils.testCommunity._id);
+                            const prevLength = data.communities.length;
+
+                            axios.post(route(`/c/${utils.testCommunity._id}/join`), null, validHeader)
+                                .then(response => {
+                                    expect(response.status).to.equal(204);
+
+                                    Account.findById(utils.testAccount._id)
+                                        .then(data => {
+                                            expect(data.communities).to.include(utils.testCommunity._id);
+                                            expect(data.communities.length).to.equal(prevLength);
+                                            done();
+                                        })
+                                        .catch(err => done(err))
+                                })
+                                .catch(err => done(err))
+                        })
+                        .catch(err => done(err))
+                })
+                .catch(err => done(err))
+            })
+    })
+
+    describe("DELETE", () => {
+        it("should remove Community from user's list", done => {
+            axios.post(route(`/c/${utils.testCommunity._id}/join`), null, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(204);
+
+                    Account.findById(utils.testAccount._id)
+                        .then(data => {
+                            expect(data.communities).to.include(utils.testCommunity._id);
+                            const prevLength = data.communities.length;
+
+                            axios.delete(route(`/c/${utils.testCommunity._id}/join`), validHeader)
+                                .then(response => {
+                                    expect(response.status).to.equal(204);
+
+                                    Account.findById(utils.testAccount._id)
+                                        .then(data => {
+                                            expect(data.communities).to.not.include(utils.testCommunity._id);
+                                            expect(data.communities.length).to.not.equal(prevLength);
+
+                                            done();
+                                        })
+                                        .catch(err => done(err))
+                                })
+                                .catch(err => done(err))
+
+                        })
+                        .catch(err => done(err));
+
+                })
+                .catch(err => done(err));
+        })
+        it("should not throw error if Community already removed from list", done => {
+            Account.findById(utils.testAccount._id)
+                .then(data => {
+                    expect(data.communities).to.not.include(utils.testCommunity._id);
+                    const prevLength = data.communities.length;
+
+                    axios.delete(route(`/c/${utils.testCommunity._id}/join`), validHeader)
+                        .then(response => {
+                            expect(response.status).to.equal(204);
+                            
+                            Account.findById(utils.testAccount._id)
+                                .then(data => {
+                                    expect(data.communities).to.not.include(utils.testCommunity._id);
+                                    expect(data.communities.length).to.equal(prevLength);
+                                    done();
+                                })
+                                .catch(err => done(err))
+                        })
+                        .catch(err => done(err))
+                })
+                .catch(err => done(err))
         })
     })
 })
