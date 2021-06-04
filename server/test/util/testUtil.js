@@ -30,7 +30,8 @@ const Utils = function () {
     };
     this.mockQuestion = {};
     this.mockAnswer = {};
-    this.mockId= "a_very_fake_id";
+    this.badId = "this_id_doesnt_conform";
+    this.mockId = "FakeIdthatHasToBe24Chars";
 
     this.testCommunity = data.communities[0];
     this.testQuestion = data.questions[0];

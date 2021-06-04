@@ -203,6 +203,11 @@ const Utils = function () {
 
         Community.findById(req.params.commId)
             .then(data => {
+                if (!data) {
+                    res.status(404).send(this.errorBody('Community with specified ID does not exist'));
+                    return;
+                }
+                
                 req.community = data;
                 next();
             })

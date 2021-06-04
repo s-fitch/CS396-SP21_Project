@@ -228,6 +228,18 @@ describe("/c/:commId", function () {
                     }
                 });
         })
+
+        it("should error on invalid ID", done => {
+            axios.get(route(`/c/${utils.badId}`))
+                .then(response => {
+                    expect(response.status).to.equal(404);
+                    expect(isError(response.data)).to.be.true;
+                    done();
+                })
+                .catch(err => {
+                    (err.response && err.response.status == 404) ? done() : done(err);
+                })
+        })
     });
 
 })

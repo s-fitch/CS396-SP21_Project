@@ -167,6 +167,7 @@ router.route("/c/:commId")
     .get(existsCommunity, (req, res) => {
         console.log(`GET /c/${req.params.commId}`);
 
+        console.log(req.community);
         res.status(200).send(req.community);
 
     })
