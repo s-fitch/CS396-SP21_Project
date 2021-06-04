@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const Community = require('./schema/Community');
 const Question = require('./schema/Question');
 const Answer = require('./schema/Answer');
+const Report = require('./schema/Report');
 
 const Utils = function () {
     // Request body formats
@@ -277,7 +278,7 @@ const Utils = function () {
                     return;
                 }
 
-                if (data.community != req.community._id) {
+                if (String(data.community) !== String(req.community._id)) {
                     res.status(404).send(this.errorBody('Question with specified ID does not exist'));
                     return;
                 }
@@ -303,14 +304,14 @@ const Utils = function () {
             return;
         }
 
-        Answer.findById(req.params.quesId)
+        Answer.findById(req.params.answId)
             .then(data => {
                 if (!data) {
                     res.status(404).send(this.errorBody('Answer with specified ID does not exist'));
                     return;
                 }
 
-                if (data.question != req.question._id) {
+                if (String(data.question) != String(req.question._id)) {
                     res.status(404).send(this.errorBody('Answer with specified ID does not exist'));
                     return;
                 }
