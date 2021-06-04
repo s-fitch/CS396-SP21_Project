@@ -44,7 +44,7 @@ const Utils = function () {
     }
 
     this.error500 = this.errorBody('An unexpected error occured in processing the request');
-    
+    this.errorMissingBody = this.errorBody('No request body provided with request')
 
     /**
      * Builds error response body for request not matching format
@@ -85,37 +85,6 @@ const Utils = function () {
         }
 
         return true
-    }
-
-    /**
-     * Determine if account login request body is valid
-     * @param {Object} body request body 
-     * @returns {[boolean, Object]} JSON is parsed body if valid, otherwise error response body
-     */
-    this.validAccountLogin = (body) => {
-        const format = this.formatLogin;
-
-        // Contain needed properties?
-        if (!this.isJsonFormatMatch(body, format)) {
-            const err = this.errorBadFormat(format);
-            return [false, err];
-        }
-
-        // Extract properties from response body
-        const newBody = {};
-        Object.keys(format).forEach(prop => newBody[prop]=body[prop]);
-        
-        // Valid email?
-        // Parameters received from: https://www.w3resource.com/javascript/form/email-validation.php
-        const regEmail = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")
-        if (!regEmail.test(newBody['email'])) {
-            const err = this.errorBody("Provided email address is invalid");
-            return [false, err];
-        }
-
-        // Request body is valid
-        return [true, newBody];
-
     }
 
     /**
@@ -162,6 +131,37 @@ const Utils = function () {
         })
     }
 
+
+    /**
+     * Determine if account login request body is valid
+     * @param {Object} body request body 
+     * @returns {[boolean, Object]} JSON is parsed body if valid, otherwise error response body
+     */
+     this.validAccountLogin = (body) => {
+        const format = this.formatLogin;
+
+        // Contain needed properties?
+        if (!this.isJsonFormatMatch(body, format)) {
+            const err = this.errorBadFormat(format);
+            return [false, err];
+        }
+
+        // Extract properties from response body
+        const newBody = {};
+        Object.keys(format).forEach(prop => newBody[prop]=body[prop]);
+        
+        // Valid email?
+        // Parameters received from: https://www.w3resource.com/javascript/form/email-validation.php
+        const regEmail = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")
+        if (!regEmail.test(newBody['email'])) {
+            const err = this.errorBody("Provided email address is invalid");
+            return [false, err];
+        }
+
+        // Request body is valid
+        return [true, newBody];
+
+    }
     /**
      * Validate and parse Community included in request body
      * @param {Object} req 
@@ -169,18 +169,18 @@ const Utils = function () {
      * @param {*} next 
      * @returns
      */
-    this.validateCommunity = (req, res, next) => {
+    this.validCommunity = (req, res, next) => {
         const format = this.formatCommunity;
         const body = req.body;
         
         // Body included?
         if (!body) {
             res.status(400)
-                .send(this.errorBody("No request body provided with request"));
+                .send(this.errorMissingBody);
             return;
         }
 
-        // Contain needed properties?
+        // Adheres to format?
         if (!this.isJsonFormatMatch(body, format)) {
             res.status(400)
                 .send(this.errorBadFormat(format));
@@ -191,10 +191,52 @@ const Utils = function () {
         const newBody = {}
         Object.keys(format).forEach(prop => newBody[prop]=body[prop])
 
-        req.data = newBody;
+        req.body = newBody;
         next();
     }
+    /**
+     * Validate and parse Report included in request body
+     * @param {Object} req 
+     * @param {Object} res 
+     * @param {*} next 
+     * @returns 
+     */
+    this.validReport = (req, res, next) => {
+        const format = this.formatReport;
+        const body = req.body;
 
+        // Body included
+        if (!body) {
+            res.status(400)
+                .send(this.errorMissingBody);
+            return;
+        }
+
+        // Adheres to format?
+        if (!this.isJsonFormatMatch(body, format)) {
+            res.status(400)
+                .send(this.errorBadFormat(format));
+            return;
+        }
+
+        // Extract properties from body
+        const newBody = {}
+        Object.keys(format).forEach(prop => newBody[prop]=body[prop]);
+
+        req.body = newBody;
+        next();
+
+    }
+
+
+
+    /**
+     * Confirm Community exists and retreive its information in process
+     * @param {Object} req 
+     * @param {Object} res 
+     * @param {*} next 
+     * @returns 
+     */
     this.existsCommunity = (req, res, next) => {
         if (!req.params.commId) {
             res.status(400).send(this.errorBody('ID of relevant Community must be included in the request path'));
@@ -207,13 +249,75 @@ const Utils = function () {
                     res.status(404).send(this.errorBody('Community with specified ID does not exist'));
                     return;
                 }
-                
+
                 req.community = data;
                 next();
             })
             .catch(err => {
                 res.status(404).send(this.errorBody('Community with specified ID does not exist'));
                 return;
+            })
+    }
+    /**
+     * Confirm Question exists and retreive its information in process
+     * @param {Object} req 
+     * @param {Object} res 
+     * @param {*} next 
+     * @returns 
+     */
+    this.existsQuestion = (req, res, next) => {
+        if (!req.params.quesId) {
+            res.status(400).send(this.errorBody('ID of relevant question must be included in the request path'))
+            return;
+        }
+
+        Question.findById(req.params.quesId)
+            .then(data => {
+                if (!data) {
+                    res.status(404).send(this.errorBody('Question with specified ID does not exist'));
+                    return;
+                }
+
+                if (data.community != req.community._id) {
+                    res.status(404).send(this.errorBody('Question with specified ID does not exist'));
+                    return;
+                }
+
+                req.question = data;
+                next();
+            })
+            .catch(err => {
+                res.status(404).send(this.errorBody('Question with specified ID does not exist'));
+                return;
+            })
+    }
+    /**
+     * Confirm Answer exists and retreive its information in the process
+     * @param {Object} req 
+     * @param {Object} res 
+     * @param {*} next 
+     * @returns 
+     */
+    this.existsAnswer = (req, res, next) => {
+        if (!req.params.quesId) {
+            res.status(400).send(this.errorBody('ID of relevant answer must be included in the request path'));
+            return;
+        }
+
+        Answer.findById(req.params.quesId)
+            .then(data => {
+                if (!data) {
+                    res.status(404).send(this.errorBody('Answer with specified ID does not exist'));
+                    return;
+                }
+
+                if (data.question != req.question._id) {
+                    res.status(404).send(this.errorBody('Answer with specified ID does not exist'));
+                    return;
+                }
+
+                req.answer = data;
+                next();
             })
     }
 }
