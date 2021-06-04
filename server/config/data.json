@@ -4,12 +4,14 @@
             "_id": "6075029f746e3f38a5f0e946",
             "email": "admin@test.com",
             "password": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+            "communities": [],
             "upvotes": [],
             "downvotes": []
         },
         {
             "_id": "6075029f746e3f38a5f0e947",
             "email": "user1@test.com",
+            "communities": ["6075029f746e3f38a5f0e948"],
             "password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
             "upvotes": ["6075029f746e3f38a5f0e94b"],
             "downvotes": ["6075029f746e3f38a5f0e94a"]
