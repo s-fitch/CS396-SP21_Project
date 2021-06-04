@@ -256,7 +256,7 @@ describe('/c/:commId/feed', function() {
             axios.get(route(`/c/${utils.testCommunity._id}/feed`))
                 .then(response => {
                     expect(response.status).to.equal(200);
-                    console.log("I NEED TRUE CONTENT CHECKING")
+                    expect(response.data.num_returned).to.equal(data.questions.filter(elem => elem['community']==utils.testCommunity._id).length);
                     done();
                 })
                 .catch(err => done(err))
