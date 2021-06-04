@@ -30,12 +30,17 @@ const Utils = function () {
     };
     this.mockQuestion = {};
     this.mockAnswer = {};
+    this.mockReport = {
+        category: 1,
+        detail: "This made me upset"
+    }
     this.badId = "this_id_doesnt_conform";
     this.mockId = "FakeIdthatHasToBe24Chars";
 
     this.testAccount = data.accounts[0];
     this.testCommunity = data.communities[0];
     this.testQuestion = data.questions[0];
+    this.testAnswer = data.answers[0];
 
     this.access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDc1MDI5Zjc0NmUzZjM4YTVmMGU5NDYiLCJpYXQiOjE2MjI3ODIzODh9.xTCfjMye-GY-NNQ_XqbwOQwJYD1DL6c4xnllB6nXHWc";
     this.refresh_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHRlc3QuY29tIiwicGFzc3dvcmQiOiI4YzY5NzZlNWI1NDEwNDE1YmRlOTA4YmQ0ZGVlMTVkZmIxNjdhOWM4NzNmYzRiYjhhODFmNmYyYWI0NDhhOTE4IiwiaWF0IjoxNjIyNzgyMzg4fQ.FoyWIkOUyWhpVUQe0HZYHztf31UgfSzA2w39mFtJ35I";

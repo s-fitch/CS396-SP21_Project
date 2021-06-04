@@ -391,3 +391,60 @@ describe('/c/:commId/join', function() {
     })
 })
 
+
+
+
+describe('/c/:commId/report', function() {
+    this.timeout(TIMEOUT);
+
+    this.beforeEach(done => {
+        resetDB(done);
+    })
+
+    describe("POST", () => {
+        it("should create report in records", done => {
+            axios.post(route(`/c/${utils.testCommunity._id}/report`), utils.mockReport, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(204);
+                    done();
+                })
+                .catch(err => done(err))
+        })
+    })
+})
+describe('/c/:commId/q/:quesId/report', function() {
+    this.timeout(TIMEOUT);
+
+    this.beforeEach(done => {
+        resetDB(done);
+    })
+
+    describe("POST", () => {
+        it("should create report in records", done => {
+            axios.post(route(`/c/${utils.testCommunity._id}/q/${utils.testQuestion._id}/report`), utils.mockReport, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(204);
+                    done();
+                })
+                .catch(err => done(err))
+        })
+    })
+})
+describe('/c/:commId/q/:quesId/a/:answId/report', function() {
+    this.timeout(TIMEOUT);
+
+    this.beforeEach(done => {
+        resetDB(done);
+    })
+
+    describe("POST", () => {
+        it("should create report in records", done => {
+            axios.post(route(`/c/${utils.testCommunity._id}/q/${utils.testQuestion._id}/a/${utils.testAnswer._id}/report`), utils.mockReport, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(204);
+                    done();
+                })
+                .catch(err => done(err))
+        })
+    })
+})
