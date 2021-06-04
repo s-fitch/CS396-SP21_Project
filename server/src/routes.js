@@ -1,12 +1,21 @@
 "use strict";
 
+require("dotenv").config()
+const utils = require("./routesUtil");
 const express = require("express");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
+
+const Account = require("./schema/Account");
 
 const notImplemented = {
     message: "This endpoint is planned but has not yet been implemented"
 }
 
+/**
+ * Base Webpage Endpoints
+ *      /   GET
+ */
 router.route("/")
     .get((req, res) => {
         console.log("GET /");
@@ -16,14 +25,68 @@ router.route("/")
     });
 
 
-/*
-    Account endpoints
-*/
+/**
+ * Account Endpoints
+ *      /account            POST, PATCH
+ *      /account/login      POST
+ *      /account/refresh    POST
+ *      /account/feed       GET
+ */
 router.route("/account")
     .post((req, res) => {
         console.log("POST /account");
         
-        res.status(200).send(notImplemented);
+        const [valid, body] = utils.validAccountLogin(req.body);
+
+        if (!valid) {
+            res.status(400).send(body);
+            return;
+        }
+
+
+        Account.exists({email: body['email']}, (err, doc) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send(utils.error500);
+                return;
+            } else {
+                if (doc) {
+                    // Email already in use
+                    res.status(400).send(utils.errorBody(`Email address ${body['email']} is already in use`));
+                    return;
+                }
+
+                // Create account
+                body['communities'] = [];
+                body['upvotes'] = [];
+                body['downvotes'] = [];
+
+                Account.create(body).save()
+                    .then(data => {
+                        // Generate JWT
+                        const access_token = jwt.sign(
+                            { _id: data['_id'], iat: Math.floor(Date.now() / 1000)},
+                            process.env.ACCESS_TOKEN_SECRET,
+                            {expiresIn: '6h'}
+                        );
+                        const refresh_token = jwt.sign(
+                            { email: body['email'], password: body['password'], iat: Math.floor(Date.now() /1000)},
+                            process.env.REFRESH_TOKEN_SECRET,
+                            {expiresIn: '14d'}
+                        );
+
+                        res.status(201).send(utils.packageTokens(access_token, refresh_token));
+                        return;
+
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).send(utils.error500);
+                        return;
+                    })
+                return;
+            }
+        })
 
     })
     .patch((req, res) => {
@@ -35,9 +98,9 @@ router.route("/account")
 
 router.route("/account/login")
     .post((req, res) => {
-        console.log("POST /account/login");
+        console.log("POST /account/login");      
 
-        res.status(200).send(notImplemented);
+        res.status(200).send(notImplemented);       
 
     })
 
@@ -60,9 +123,15 @@ router.route("/account/feed")
 
 
 
-/*
-    Community endpoints
-*/
+/**
+ * Community Endpoints
+ *      /c              POST
+ *      /c/search       GET
+ *      /c/:id          GET, PATCH
+ *      /c/:id/feed     GET
+ *      /c/:id/join     POST, DELETE
+ *      /c/:id/report   POST
+ */
 router.route("/c")
     .post((req, res) => {
         console.log("POST /c");
@@ -107,7 +176,12 @@ router.route("/c/:commId/join")
 
         res.status(200).send(notImplemented);
 
-    });
+    })
+    .delete((req, res) => {
+        console.log(`DELETE /c/${req.params.commId}/join`);
+
+        res.status(200).send(notImplemented);
+    })
 
 router.route("/c/:commId/report")
     .post((req, res) => {
@@ -120,9 +194,12 @@ router.route("/c/:commId/report")
 
 
 
-/*
-    Question endpoints
-*/
+/**
+ * Question endpoints
+ *      /c/:id/q                POST
+ *      /c/:id/q/:id            GET
+ *      /c/:id/q/:id/report     POST
+ */
 router.route("/c/:commId/q")
     .post((req, res) => {
         console.log(`POST /c/${req.params.commId}/q`);
@@ -132,14 +209,14 @@ router.route("/c/:commId/q")
     });
 
 router.route("/c/:commId/q/:quesId")
-    .post((req, res) => {
-        console.log(`POST /c/${req.params.commId}/q/${req.params.quesId}`);
+    .get((req, res) => {
+        console.log(`GET /c/${req.params.commId}/q/${req.params.quesId}`);
 
         res.status(200).send(notImplemented);
 
     });
 
-router.route("/c/:commId/q/:quesId")
+router.route("/c/:commId/q/:quesId/report")
     .post((req, res) => {
         console.log(`POST /c/${req.params.commId}/q/${req.params.quesId}/report`);
 
@@ -149,9 +226,13 @@ router.route("/c/:commId/q/:quesId")
 
 
 
-/*
-    Answer endpoints
-*/
+/**
+ * Answer Endpoints
+ *      /c/:id/q/:id/a                  POST
+ *      /c/:id/q/:id/a/:id/upvote       POST, DELETE
+ *      /c/:id/q/:id/a/:id/downvote     POST, DELETE
+ *      /c/:id/q/:id/a/:id/report       POST
+ */
 router.route("/c/:commId/q/:quesId/a")
     .post((req, res) => {
         console.log(`POST /c/${req.params.commId}/q/${req.params.quesId}/a`);
@@ -186,6 +267,14 @@ router.route("/c/:commId/q/:quesId/a/:answId/downvote")
 
         res.status(200).send(notImplemented);
         
+    })
+
+router.route("/c/:commId/q/:quesId/a/:answId/report")
+    .post((req, res) => {
+        console.log(`POST /c/${req.params.commId}/q/${req.params.quesId}/a/${req.params.answId}/report`);
+
+        res.status(200).send(notImplemented);
+
     })
 
 
