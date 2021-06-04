@@ -13,7 +13,7 @@ const Answer = require("./schema/Answer");
 const Report = require("./schema/Report");
 
 const {
-    authenticateToken, errorBody, error500, handleReport,
+    authenticateToken, errorBody, error500, handleReport, handleVote,
     existsCommunity, existsQuestion, existsAnswer, 
     validCommunity, validQuestion, validAnswer, validReport
 } = utils;
@@ -192,7 +192,6 @@ router.route("/c/:commId/feed")
         Question.find({ community: req.community._id })
             .sort('time')
             .then(data => {
-                console.log(data);
                 const body = {
                     num_returned: data.length,
                     questions: data
@@ -329,45 +328,38 @@ router.route("/c/:commId/q/:quesId/report")
  *      /c/:id/q/:id/a/:id/report       POST
  */
 router.route("/c/:commId/q/:quesId/a")
-    .post((req, res) => {
+    .post(authenticateToken, existsCommunity, existsQuestion, validAnswer, (req, res) => {
         console.log(`POST /c/${req.params.commId}/q/${req.params.quesId}/a`);
+        
+        const answer = {
+            content: req.body.content,
+            community: req.community._id,
+            question: req.question._id,
+            author: req.user._id,
+            time: Date.now(),
+            score: 0
+        }
 
-        res.status(200).send(notImplemented);
+        Answer.create(answer).save()
+            .then(data => {
+                res.status(204).send();
+                return
+            })
+            .catch(err => done(err))
 
     });
 
 router.route("/c/:commId/q/:quesId/a/:answId/upvote")
-    .post((req, res) => {
-        console.log(`POST /c/${req.params.commId}/q/${req.params.quesId}/a/${req.params.answId}/upvote`);
-
-        res.status(200).send(notImplemented);
-
-    })
-    .delete((req, res) => {
-        console.log(`POST /c/${req.params.commId}/q/${req.params.quesId}/a/${req.params.answId}/upvote`);
-
-        res.status(200).send(notImplemented);
-
-    });
+    .post(authenticateToken, existsCommunity, existsQuestion, existsAnswer, handleVote)
+    .delete(authenticateToken, existsCommunity, existsQuestion, existsAnswer, handleVote);
 
 router.route("/c/:commId/q/:quesId/a/:answId/downvote")
-    .post((req, res) => {
-        console.log(`POST /c/${req.params.commId}/q/${req.params.quesId}/a/${req.params.answId}/downvote`);
-
-        res.status(200).send(notImplemented);
-
-    })
-    .delete((req, res) => {
-        console.log(`POST /c/${req.params.commId}/q/${req.params.quesId}/a/${req.params.answId}/downvote`);
-
-        res.status(200).send(notImplemented);
-        
-    })
+    .post(authenticateToken, existsCommunity, existsQuestion, existsAnswer, handleVote)
+    .delete(authenticateToken, existsCommunity, existsQuestion, existsAnswer, handleVote)
 
 router.route("/c/:commId/q/:quesId/a/:answId/report")
     .post(authenticateToken, existsCommunity, existsQuestion, existsAnswer, validReport, (req, res) => {
         console.log(`POST /c/${req.params.commId}/q/${req.params.quesId}/a/${req.params.answId}/report`);
-
         handleReport(req, res, req.answer);
 
     })

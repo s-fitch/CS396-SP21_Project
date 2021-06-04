@@ -347,5 +347,57 @@ const Utils = function () {
                 return;
             })
     }
+    /**
+     * Handles all of the vote changes associated with answers
+     * @param {Object} req 
+     * @param {Object} res 
+     * @param {string} type Either 'upvote' or 'downvote'
+     * @param {string} verb Either 'POST' or 'DELETE'
+     */
+    this.handleVote = (req, res) => {
+        const splitPath = req.route.path.split('/')
+        const voteType = splitPath[splitPath.length-1]
+        const verb = Object.keys(req.route.path.methods)[0]
+        
+        console.log(`${verb} /c/${req.params.commId}/q/${req.params.quesId}/a/${req.params.answId}/${voteType}`);
+
+        let alreadyDone;
+        let voteList;
+        let scoreChange;
+
+        if ((voteType === 'upvote' && verb === 'POST') ||
+            (voteType === 'downvote' && verb === 'DELETE')) {
+                alreadyDone = (a, b) => (a in b);
+                voteList = 'upvotes';
+                scoreChange = {$inc: {score:1}};
+        } else {
+            alreadyDone = (a, b) => !(a in b);
+            voteList = 'downvotes';
+            scoreChange = {$dec: {score:1}};
+        }
+
+        Account.findById(req.user._id)
+            .then(data => {
+                if (alreadyDone(answer._id, data.voteList)) {
+                    res.status(204).send();
+                    return;
+                }
+
+
+                data.voteList.push(req.params.quesId);
+                Account.findByIdAndUpdate(req.user._id, {voteList: data.voteList})
+                    .then(data => {
+                        Answer.findByIdAndUpdate(req.answer._id, scoreChange)
+                        .then(data => {
+                            res.status(204).send();
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            res.status(500).send(error500);
+                        })
+                    })
+            })
+
+    }
 }
 module.exports = new Utils();
