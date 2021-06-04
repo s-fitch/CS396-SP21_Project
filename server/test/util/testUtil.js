@@ -33,6 +33,7 @@ const Utils = function () {
     this.badId = "this_id_doesnt_conform";
     this.mockId = "FakeIdthatHasToBe24Chars";
 
+    this.testAccount = data.accounts[0];
     this.testCommunity = data.communities[0];
     this.testQuestion = data.questions[0];
 
