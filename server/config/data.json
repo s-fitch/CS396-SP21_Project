@@ -30,7 +30,7 @@
             "author": "6075029f746e3f38a5f0e946",
             "time": 1622352879000,
             "title": "Question Title",
-            "body": "Is this a good question body? I hope so but it's my first one so I'm not super confident."
+            "content": "Is this a good question content? I hope so but it's my first one so I'm not super confident."
         }
     ],
     "answers": [
@@ -40,7 +40,7 @@
             "question": "6075029f746e3f38a5f0e949",
             "author": "6075029f746e3f38a5f0e946",
             "time": 1622353227000,
-            "body": "I'm just gonna answer my own question: yes, it is a good question body.",
+            "content": "I'm just gonna answer my own question: yes, it is a good question content.",
             "score": -1
         },
         {
@@ -49,7 +49,7 @@
             "question": "6075029f746e3f38a5f0e949",
             "author": "6075029f746e3f38a5f0e947",
             "time": 1622353303000,
-            "body": "No it's a horrible question and you should feel bad.",
+            "content": "No it's a horrible question and you should feel bad.",
             "score": 1
         }
     ]
