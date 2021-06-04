@@ -319,5 +319,32 @@ const Utils = function () {
                 next();
             })
     }
+
+    /**
+     * Generic function used to handle all error reporting for the various endpoints
+     * @param {Object} req 
+     * @param {Object} res 
+     * @param {Object} item full entry of item being reported at time of reporting
+     */
+    this.handleReport = (req, res, item) => {
+        const report = {
+            category: Number(req.body.category),
+            detail: req.body.detail,
+            reporter: req.user._id,
+            time: Date.now(),
+            item: item
+        }
+
+        Report.create(report).save()
+            .then(response => {
+                res.status(204).send();
+                return;
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(error500);
+                return;
+            })
+    }
 }
 module.exports = new Utils();

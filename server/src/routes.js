@@ -13,7 +13,7 @@ const Answer = require("./schema/Answer");
 const Report = require("./schema/Report");
 
 const {
-    authenticateToken, errorBody, error500,
+    authenticateToken, errorBody, error500, handleReport,
     existsCommunity, existsQuestion, existsAnswer, 
     validCommunity, validQuestion, validAnswer, validReport
 } = utils;
@@ -146,6 +146,12 @@ router.route("/c")
     .post(authenticateToken, validCommunity, (req, res) => {
         console.log("POST /c");
 
+        const community = {
+            name: req.body.name,
+            description: req.body.description,
+            moderators: [req.user._id]
+        }
+
         Community.create(req.body).save()
             .then(data => {
                 res.status(201).send(data);
@@ -183,7 +189,7 @@ router.route("/c/:commId/feed")
     .get(existsCommunity, (req, res) => {
         console.log(`GET /c/${req.params.commId}/feed`);
 
-        Question.find({})
+        Question.find({ community: req.community._id })
             .sort('time')
             .then(data => {
                 console.log(data);
@@ -236,24 +242,7 @@ router.route("/c/:commId/report")
     .post(authenticateToken, existsCommunity, validReport, (req, res) => {
         console.log(`POST /c/${req.params.commId}/report`);
 
-        const report = {
-            category: req.body.category,
-            detail: req.body.detail,
-            reporter: req.user._id,
-            time: Date.now(),
-            item: req.community
-        }
-
-        Report.create(report).save()
-            .then(response => {
-                res.status(204).send();
-                return;
-            })
-            .catch(err => {
-                console.log(err);
-                res.status(500).send(error500);
-                return;
-            })
+        handleReport(req, res, req.community)
 
     });
 
@@ -267,18 +256,56 @@ router.route("/c/:commId/report")
  *      /c/:id/q/:id/report     POST
  */
 router.route("/c/:commId/q")
-    .post((req, res) => {
+    .post(authenticateToken, existsCommunity, validQuestion, (req, res) => {
         console.log(`POST /c/${req.params.commId}/q`);
 
-        res.status(200).send(notImplemented);
+        const question = {
+            community: req.community._id,
+            author: req.user._id,
+            time: Date.now(),
+            title: req.body.title,
+            content: req.body.content
+        }
+
+        Question.create(question).save()
+            .then(data => {
+                delete data['author'];
+                question['answers'] = [];
+
+                res.status(201).send(question);
+                return;
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(error500);
+                return;
+            })
 
     });
 
 router.route("/c/:commId/q/:quesId")
-    .get((req, res) => {
+    .get(authenticateToken, existsCommunity, existsQuestion, (req, res) => {
         console.log(`GET /c/${req.params.commId}/q/${req.params.quesId}`);
 
-        res.status(200).send(notImplemented);
+        const question = req.question;
+        delete question['author'];
+
+        Answer.find({ question: req.question._id })
+            .sort('score')
+            .then(data => {
+                data.forEach(answer => {
+                    delete answer['author']
+                });
+                question['answers'] = data;
+
+                res.status(200).send(question);
+                return;
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(error500);
+                return;
+            })
 
     });
 
@@ -286,7 +313,7 @@ router.route("/c/:commId/q/:quesId/report")
     .post(authenticateToken, existsCommunity, existsQuestion, validReport, (req, res) => {
         console.log(`POST /c/${req.params.commId}/q/${req.params.quesId}/report`);
 
-        res.status(200).send(notImplemented);
+        handleReport(req, res, req.question)
 
     });
 
@@ -336,10 +363,10 @@ router.route("/c/:commId/q/:quesId/a/:answId/downvote")
     })
 
 router.route("/c/:commId/q/:quesId/a/:answId/report")
-    .post((req, res) => {
+    .post(authenticateToken, existsCommunity, existsQuestion, existsAnswer, validReport, (req, res) => {
         console.log(`POST /c/${req.params.commId}/q/${req.params.quesId}/a/${req.params.answId}/report`);
 
-        res.status(200).send(notImplemented);
+        handleReport(req, res, req.answer);
 
     })
 
