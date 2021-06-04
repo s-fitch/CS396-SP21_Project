@@ -15,7 +15,7 @@ const Report = require("./schema/Report");
 const {
     authenticateToken, errorBody, error500, handleReport, handleVote,
     existsCommunity, existsQuestion, existsAnswer, 
-    validCommunity, validQuestion, validAnswer, validReport
+    validAccountLogin, validCommunity, validQuestion, validAnswer, validReport
 } = utils;
 
 const notImplemented = {
@@ -43,18 +43,13 @@ router.route("/")
  *      /account/feed       GET
  */
 router.route("/account")
-    .post((req, res) => {
+    .post(validAccountLogin, (req, res) => {
         console.log("POST /account");
-        
-        const [valid, body] = utils.validAccountLogin(req.body);
 
-        if (!valid) {
-            res.status(400).send(body);
-            return;
-        }
+        const body = req.body
 
 
-        Account.exists({email: body['email']}, (err, doc) => {
+        Account.exists({email: body.email}, (err, doc) => {
             if (err) {
                 console.log(err);
                 res.status(500).send(error500);
@@ -80,7 +75,7 @@ router.route("/account")
                             {expiresIn: '6h'}
                         );
                         const refresh_token = jwt.sign(
-                            { email: body['email'], password: body['password'], iat: Math.floor(Date.now() /1000)},
+                            { email: body['email'], password: req.body['password'], iat: Math.floor(Date.now() /1000)},
                             process.env.REFRESH_TOKEN_SECRET,
                             {expiresIn: '14d'}
                         );
@@ -94,7 +89,6 @@ router.route("/account")
                         res.status(500).send(error500);
                         return;
                     })
-                return;
             }
         })
 

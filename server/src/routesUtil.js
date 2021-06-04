@@ -104,8 +104,8 @@ const Utils = function () {
 
     /**
      * Authenticate validity of the JWT authorization token
-     * @param {Object} req 
-     * @param {Object} res 
+     * @param {Object} req Express routing request object 
+     * @param {Object} res Express routing response object 
      * @param {*} next 
      * @returns {None}
      */
@@ -133,40 +133,11 @@ const Utils = function () {
     }
 
 
-    /**
-     * Determine if account login request body is valid
-     * @param {Object} body request body 
-     * @returns {[boolean, Object]} JSON is parsed body if valid, otherwise error response body
-     */
-     this.validAccountLogin = (body) => {
-        const format = this.formatLogin;
-
-        // Contain needed properties?
-        if (!this.isJsonFormatMatch(body, format)) {
-            const err = this.errorBadFormat(format);
-            return [false, err];
-        }
-
-        // Extract properties from response body
-        const newBody = {};
-        Object.keys(format).forEach(prop => newBody[prop]=body[prop]);
-        
-        // Valid email?
-        // Parameters received from: https://www.w3resource.com/javascript/form/email-validation.php
-        const regEmail = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")
-        if (!regEmail.test(newBody['email'])) {
-            const err = this.errorBody("Provided email address is invalid");
-            return [false, err];
-        }
-
-        // Request body is valid
-        return [true, newBody];
-
-    }
+    
     /**
      * Validates request body based on provided JSON format structure
-     * @param {Object} req 
-     * @param {Object} res 
+     * @param {Object} req Express routing request object 
+     * @param {Object} res Express routing response object 
      * @param {*} next 
      * @param {Object} format structure that request body must adhere to
      * @returns 
@@ -190,39 +161,65 @@ const Utils = function () {
 
         // Extract properties from body
         const newBody = {}
-        Object.keys(format).forEach(prop => newBody[prop]=body[prop])
+        Object.keys(format).forEach(prop => newBody[prop]=body[prop]);
 
         req.body = newBody;
+        if (next) {
+            next();
+        } else {
+            return;
+        }
+    }
+    /**
+     * Determine if account login request body is valid
+     * @param {Object} body request body 
+     * @returns {[boolean, Object]} JSON is parsed body if valid, otherwise error response body
+     */
+     this.validAccountLogin = (req, res, next) => {
+        const format = this.formatLogin;
+        // Valid body?
+        validGeneric(req, res, null, format);
+
+        // Valid email
+        // Parameters received from: https://www.w3resource.com/javascript/form/email-validation.php
+        const regEmail = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")
+        if (!regEmail.test(req.body.email)) {
+            res.status(400)
+                .send(this.errorBody("Email address is already in use"));
+            return;
+        }
+
         next();
+
     }
     /**
      * Validate and parse Community included in request body
-     * @param {Object} req 
-     * @param {Object} res 
+     * @param {Object} req Express routing request object 
+     * @param {Object} res Express routing response object 
      * @param {*} next 
      * @returns
      */
     this.validCommunity = (req, res, next) => validGeneric(req, res, next, this.formatCommunity);
     /**
      * Validate and parse Question included in request body
-     * @param {Object} req 
-     * @param {Object} res 
+     * @param {Object} req Express routing request object 
+     * @param {Object} res Express routing response object 
      * @param {*} next 
      * @returns 
      */
     this.validQuestion = (req, res, next) => validGeneric(req, res, next, this.formatQuestion);
     /**
      * Validate and parse Answer included in request body
-     * @param {Object} req 
-     * @param {Object} res 
+     * @param {Object} req Express routing request object 
+     * @param {Object} res Express routing response object 
      * @param {*} next 
      * @returns 
      */
     this.validAnswer = (req, res, next) => validGeneric(req, res, next, this.formatAnswer);
     /**
      * Validate and parse Report included in request body
-     * @param {Object} req 
-     * @param {Object} res 
+     * @param {Object} req Express routing request object 
+     * @param {Object} res Express routing response object 
      * @param {*} next 
      * @returns 
      */
@@ -232,8 +229,8 @@ const Utils = function () {
 
     /**
      * Confirm Community exists and retreive its information in process
-     * @param {Object} req 
-     * @param {Object} res 
+     * @param {Object} req Express routing request object 
+     * @param {Object} res Express routing response object 
      * @param {*} next 
      * @returns 
      */
@@ -260,8 +257,8 @@ const Utils = function () {
     }
     /**
      * Confirm Question exists and retreive its information in process
-     * @param {Object} req 
-     * @param {Object} res 
+     * @param {Object} req Express routing request object 
+     * @param {Object} res Express routing response object 
      * @param {*} next 
      * @returns 
      */
@@ -293,8 +290,8 @@ const Utils = function () {
     }
     /**
      * Confirm Answer exists and retreive its information in the process
-     * @param {Object} req 
-     * @param {Object} res 
+     * @param {Object} req Express routing request object 
+     * @param {Object} res Express routing response object 
      * @param {*} next 
      * @returns 
      */
@@ -323,8 +320,8 @@ const Utils = function () {
 
     /**
      * Generic function used to handle all error reporting for the various endpoints
-     * @param {Object} req 
-     * @param {Object} res 
+     * @param {Object} req Express routing request object 
+     * @param {Object} res Express routing response object 
      * @param {Object} item full entry of item being reported at time of reporting
      */
     this.handleReport = (req, res, item) => {
@@ -349,8 +346,8 @@ const Utils = function () {
     }
     /**
      * Handles all of the vote changes associated with answers
-     * @param {Object} req 
-     * @param {Object} res 
+     * @param {Object} req Express routing request object 
+     * @param {Object} res Express routing response object 
      * @param {string} type Either 'upvote' or 'downvote'
      * @param {string} verb Either 'POST' or 'DELETE'
      */
