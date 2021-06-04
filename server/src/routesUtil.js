@@ -163,14 +163,14 @@ const Utils = function () {
 
     }
     /**
-     * Validate and parse Community included in request body
+     * Validates request body based on provided JSON format structure
      * @param {Object} req 
      * @param {Object} res 
      * @param {*} next 
-     * @returns
+     * @param {Object} format structure that request body must adhere to
+     * @returns 
      */
-    this.validCommunity = (req, res, next) => {
-        const format = this.formatCommunity;
+    const validGeneric = (req, res, next, format) => {
         const body = req.body;
         
         // Body included?
@@ -195,39 +195,38 @@ const Utils = function () {
         next();
     }
     /**
+     * Validate and parse Community included in request body
+     * @param {Object} req 
+     * @param {Object} res 
+     * @param {*} next 
+     * @returns
+     */
+    this.validCommunity = (req, res, next) => validGeneric(req, res, next, this.formatCommunity);
+    /**
+     * Validate and parse Question included in request body
+     * @param {Object} req 
+     * @param {Object} res 
+     * @param {*} next 
+     * @returns 
+     */
+    this.validQuestion = (req, res, next) => validGeneric(req, res, next, this.formatQuestion);
+    /**
+     * Validate and parse Answer included in request body
+     * @param {Object} req 
+     * @param {Object} res 
+     * @param {*} next 
+     * @returns 
+     */
+    this.validAnswer = (req, res, next) => validGeneric(req, res, next, this.formatAnswer);
+    /**
      * Validate and parse Report included in request body
      * @param {Object} req 
      * @param {Object} res 
      * @param {*} next 
      * @returns 
      */
-    this.validReport = (req, res, next) => {
-        const format = this.formatReport;
-        const body = req.body;
-
-        // Body included
-        if (!body) {
-            res.status(400)
-                .send(this.errorMissingBody);
-            return;
-        }
-
-        // Adheres to format?
-        if (!this.isJsonFormatMatch(body, format)) {
-            res.status(400)
-                .send(this.errorBadFormat(format));
-            return;
-        }
-
-        // Extract properties from body
-        const newBody = {}
-        Object.keys(format).forEach(prop => newBody[prop]=body[prop]);
-
-        req.body = newBody;
-        next();
-
-    }
-
+    this.validReport = (req, res, next) => validGeneric(req, res, next, this.formatReport);
+    
 
 
     /**
