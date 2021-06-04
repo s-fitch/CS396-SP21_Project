@@ -34,7 +34,7 @@ QuestionSchema.statics.create = function(obj) {
     question.author = obj.author;
     question.time = obj.time;
     question.title = obj.title;
-    question.body = obj.body;
+    question.content = obj.content;
     return question;
 }
 

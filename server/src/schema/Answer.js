@@ -39,7 +39,7 @@ AnswerSchema.statics.create = function(obj) {
     answer.question = obj.question;
     answer.author = obj.author;
     answer.time = obj.time;
-    answer.body = obj.body;
+    answer.content = obj.content;
     answer.score = obj.score;
     return answer;
 }
