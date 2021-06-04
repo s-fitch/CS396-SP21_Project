@@ -16,7 +16,9 @@ app.use(express.json(bodyConfig));
 const middleware = require("./config/middleware");
 app.use(middleware.cors);
 
-const config = require("./config/config")[env || "development"];
+const environment = env || "development";
+const config = require("./config/config")[environment];
+const DB_NAME = (environment=="development") ? process.env.DB_NAME_DEVELOPMENT : process.env.DB_NAME_PRODUCTION;
 const mongoose = require("mongoose");
 
 console.log("Trying to connect to database...");
@@ -25,7 +27,7 @@ mongoose.connect(config.database, config.mongoConfig, err => {
         console.log("Could not connect to database.");
         console.log(err);
     } else {
-        console.log(`Connected to ${process.env.DB_NAME}.`);
+        console.log(`Connected to ${DB_NAME}.`);
     }
 });
 

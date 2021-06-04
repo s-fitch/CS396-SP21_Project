@@ -4,9 +4,11 @@
   "description": "Community Q's backend server",
   "main": "index.js",
   "scripts": {
-    "populate": "cross-env NODE_ENV=development node ./config/scripts/execPopulateDB.js",
-    "start": "cross-env NODE_ENV=development nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_ENV=development mocha --exit",
+    "dev_start": "cross-env NODE_ENV=development nodemon index.js",
+    "dev_populate": "cross-env NODE_ENV=development node ./config/scripts/execPopulateDB.js",
+    "prod_populate": "cross-env NODE_ENV=production node ./config/scripts/execPopulateDB.js",
+    "prod_start": "cross-env NODE_ENV=production nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -19,9 +21,12 @@
   },
   "homepage": "https://github.com/s-fitch/CS396-SP21_Project#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^8.4.0",
     "mongoose": "^5.12.12",
     "nodemon": "^2.0.7"
   }
