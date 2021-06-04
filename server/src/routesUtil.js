@@ -1,3 +1,10 @@
+require("dotenv").config()
+const jwt = require('jsonwebtoken');
+
+const Community = require('./schema/Community');
+const Question = require('./schema/Question');
+const Answer = require('./schema/Answer');
+
 const Utils = function () {
     // Request body formats
     this.formatLogin = {
@@ -97,8 +104,6 @@ const Utils = function () {
         // Extract properties from response body
         const newBody = {};
         Object.keys(format).forEach(prop => newBody[prop]=body[prop]);
-
-        // Valid types?
         
         // Valid email?
         // Parameters received from: https://www.w3resource.com/javascript/form/email-validation.php
@@ -125,6 +130,86 @@ const Utils = function () {
             'refresh_token': refresh
         }
         return body;
+    }
+
+    /**
+     * Authenticate validity of the JWT authorization token
+     * @param {Object} req 
+     * @param {Object} res 
+     * @param {*} next 
+     * @returns {None}
+     */
+    this.authenticateToken = (req, res, next) => {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1]
+
+        if (!token) {
+            // Missing token
+            res.status(401)
+                .send(this.errorBody('No authorizatoin token provided'));
+            return;
+        }
+
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+            if (err) {
+                // Invalid token
+                res.status(403)
+                    .send(this.errorBody('Invalid authorization token rpovided'));
+                return;
+            }
+            req.user = decoded;
+            next();
+        })
+    }
+
+    /**
+     * Validate and parse Community included in request body
+     * @param {Object} req 
+     * @param {Object} res 
+     * @param {*} next 
+     * @returns
+     */
+    this.validateCommunity = (req, res, next) => {
+        const format = this.formatCommunity;
+        const body = req.body;
+        
+        // Body included?
+        if (!body) {
+            res.status(400)
+                .send(this.errorBody("No request body provided with request"));
+            return;
+        }
+
+        // Contain needed properties?
+        if (!this.isJsonFormatMatch(body, format)) {
+            res.status(400)
+                .send(this.errorBadFormat(format));
+            return;
+        }
+
+        // Extract properties from body
+        const newBody = {}
+        Object.keys(format).forEach(prop => newBody[prop]=body[prop])
+
+        req.data = newBody;
+        next();
+    }
+
+    this.existsCommunity = (req, res, next) => {
+        if (!req.params.commId) {
+            res.status(400).send(this.errorBody('ID of relevant Community must be included in the request path'));
+            return;
+        }
+
+        Community.findById(req.params.commId)
+            .then(data => {
+                req.community = data;
+                next();
+            })
+            .catch(err => {
+                res.status(404).send(this.errorBody('Community with specified ID does not exist'));
+                return;
+            })
     }
 }
 module.exports = new Utils();

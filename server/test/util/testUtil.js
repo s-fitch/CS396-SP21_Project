@@ -16,6 +16,7 @@ const Answer = require("../../src/schema/Answer");
 const axios = require("axios");
 
 const Utils = function () {
+    this.resetDB = resetDB;
 
     this.fixtures = {};
 
@@ -23,11 +24,20 @@ const Utils = function () {
         email: "fake@notrealwebsite.com",
         password: "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
     };
-    this.mockCommunity = {};
+    this.mockCommunity = {
+        name: "Testing Community",
+        description: "This is a community devoted to testing out the server endpoints. If you're seeing this, congratulations! You got to witness me make some major mistake!"
+    };
     this.mockQuestion = {};
     this.mockAnswer = {};
-
     this.mockId= "a_very_fake_id";
+
+    this.testCommunity = data.communities[0];
+    this.testQuestion = data.questions[0];
+
+    this.access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDc1MDI5Zjc0NmUzZjM4YTVmMGU5NDYiLCJpYXQiOjE2MjI3ODIzODh9.xTCfjMye-GY-NNQ_XqbwOQwJYD1DL6c4xnllB6nXHWc";
+    this.refresh_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHRlc3QuY29tIiwicGFzc3dvcmQiOiI4YzY5NzZlNWI1NDEwNDE1YmRlOTA4YmQ0ZGVlMTVkZmIxNjdhOWM4NzNmYzRiYjhhODFmNmYyYWI0NDhhOTE4IiwiaWF0IjoxNjIyNzgyMzg4fQ.FoyWIkOUyWhpVUQe0HZYHztf31UgfSzA2w39mFtJ35I";
+    this.expired_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDc1MDI5Zjc0NmUzZjM4YTVmMGU5NDYiLCJpYXQiOjE2MjI3ODIzODgsImV4cCI6MTYyMjc4MjM4OX0.fEbbkRHz-8dqEuc1SX6FoEXlmYwjbdrv9dYMo3QjX7M";
 
     this.formatToken = {
         access_token: "string",
@@ -72,7 +82,7 @@ const Utils = function () {
         if (!Object.keys(format).every(prop => body.hasOwnProperty(prop))) {
             return false
         }
-        
+
         if (!Object.keys(format).every(prop => isTypeMatch(body[prop], format[prop]))) {
             return false
         }
@@ -80,11 +90,11 @@ const Utils = function () {
         return true
     }
 
-    this.isValidToken = function(item) {
+    this.isToken = function(item) {
         return this.isJsonFormatMatch(item, this.formatToken)
     }
 
-    this.isValidError = function(item) {
+    this.isError = function(item) {
         return this.isJsonFormatMatch(item, this.formatError);
     }
 

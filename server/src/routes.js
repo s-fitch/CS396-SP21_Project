@@ -1,12 +1,18 @@
 "use strict";
 
 require("dotenv").config()
-const utils = require("./routesUtil");
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 
+const utils = require("./routesUtil");
 const Account = require("./schema/Account");
+const Community = require("./schema/Community");
+const Question = require("./schema/Question");
+
+const {
+    authenticateToken, existsCommunity
+} = utils;
 
 const notImplemented = {
     message: "This endpoint is planned but has not yet been implemented"
@@ -133,10 +139,19 @@ router.route("/account/feed")
  *      /c/:id/report   POST
  */
 router.route("/c")
-    .post((req, res) => {
+    .post(authenticateToken, utils.validateCommunity, (req, res) => {
         console.log("POST /c");
 
-        res.status(200).send(notImplemented);
+        Community.create(req.data).save()
+            .then(data => {
+                console.log(data);
+                res.status(201).send(data);
+                return;
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(utils.error500);
+            })
 
     });
 
@@ -149,10 +164,10 @@ router.route("/c/search")
     });
 
 router.route("/c/:commId")
-    .get((req, res) => {
+    .get(existsCommunity, (req, res) => {
         console.log(`GET /c/${req.params.commId}`);
 
-        res.status(200).send(notImplemented);
+        res.status(200).send(req.community);
 
     })
     .patch((req, res) => {
@@ -163,10 +178,17 @@ router.route("/c/:commId")
     });
 
 router.route("/c/:commId/feed")
-    .get((req, res) => {
+    .get(existsCommunity, (req, res) => {
         console.log(`GET /c/${req.params.commId}/feed`);
 
-        res.status(200).send(notImplemented);
+        Question.find({community: req.params.commId})
+            .sort('time')
+            .then(data => {
+                res.status(200).send(data);
+            })
+            .catch(err => {
+                res.status(500).send(utils.error500);
+                })
 
     });
 
