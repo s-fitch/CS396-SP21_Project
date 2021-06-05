@@ -126,6 +126,38 @@ describe("/account", function () {
     })
 })
 
+describe("/account/feed", function () {
+    this.timeout(TIMEOUT);
+
+    this.beforeEach(done => {
+        resetDB(done);
+    });
+
+    describe("GET", () => {
+        it('should retreive list of communities', done => {
+            axios.get(route('/account/feed'), validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(200);
+                    expect(response.data.length).to.equal(0);
+                    done();
+                })
+                .catch(err => done(err))
+        })
+
+        it('should error on invalid authentication', done => {
+            axios.get(route('/account/feed'), invalidHeader)
+                .then(response => {
+                    expect(response.status).to.equal(403);
+                    expect(isError(response.body)).to.be.true;
+                    done();
+                })
+                .catch(err => {
+                    (err.response && err.response.status==403) ? done() : done(err);
+                })
+        })
+    })
+})
+
 describe("/c",  function() {
     this.timeout(TIMEOUT);
 

@@ -13,7 +13,7 @@ const Answer = require("./schema/Answer");
 const Report = require("./schema/Report");
 
 const {
-    authenticateToken, errorBody, error500, handleReport, handleVote,
+    createTokens, authenticateToken, errorBody, error500, handleReport, handleVote,
     existsCommunity, existsQuestion, existsAnswer, 
     validAccountLogin, validCommunity, validQuestion, validAnswer, validReport
 } = utils;
@@ -46,7 +46,7 @@ router.route("/account")
     .post(validAccountLogin, (req, res) => {
         console.log("POST /account");
 
-        const body = req.body
+        const body = req.body;
 
 
         Account.exists({email: body.email}, (err, doc) => {
@@ -68,19 +68,9 @@ router.route("/account")
 
                 Account.create(body).save()
                     .then(data => {
-                        // Generate JWT
-                        const access_token = jwt.sign(
-                            { _id: data['_id'], iat: Math.floor(Date.now() / 1000)},
-                            process.env.ACCESS_TOKEN_SECRET,
-                            {expiresIn: '6h'}
-                        );
-                        const refresh_token = jwt.sign(
-                            { email: body['email'], password: req.body['password'], iat: Math.floor(Date.now() /1000)},
-                            process.env.REFRESH_TOKEN_SECRET,
-                            {expiresIn: '14d'}
-                        );
-
-                        res.status(201).send(utils.packageTokens(access_token, refresh_token));
+                        // Return JWT
+                        data.password = body.password;
+                        res.status(201).send(createTokens(data));
                         return;
 
                     })
@@ -101,10 +91,21 @@ router.route("/account")
     })
 
 router.route("/account/login")
-    .post((req, res) => {
+    .post(validAccountLogin, (req, res) => {
         console.log("POST /account/login");      
 
-        res.status(200).send(notImplemented);       
+        Account.findOne({email: req.body.email})
+            .then(data => {
+                if (!data || data.password != req.body.password) {
+                    // Login failed
+                    res.status(403).send(errorBody('Invalid username or password'));
+                    return;
+                }
+
+                res.status(200).send(createTokens(data));
+                return;
+
+            })      
 
     })
 
@@ -117,10 +118,27 @@ router.route("/account/refresh")
     })
 
 router.route("/account/feed")
-    .post((req, res) => {
+    .get(authenticateToken, (req, res) => {
         console.log("POST /account/feed");
 
-        res.status(200).send(notImplemented);
+        Account.findById(req.user._id)
+            .then(data => {
+                
+                Community.find({_id: {$in: data.communities}})
+                    .then(data => {
+                        res.status(200).send(data);
+                        return;
+                    })
+                    .catch(err => {
+                        res.status(500).send(error500);
+                        return;
+                    })
+
+            })
+            .catch(err => {
+                res.status(500).send(error500);
+                return;
+            })
 
     })
 

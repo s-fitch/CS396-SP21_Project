@@ -95,11 +95,30 @@ const Utils = function () {
      * @returns {Object}
      */
     this.packageTokens = (access, refresh) => {
-        const body = {
-            'access_token': access,
-            'refresh_token': refresh
+        
+    }
+    /**
+     * Generate JSON Web Tokens for authentication
+     * @param {Object} data Account data from query
+     * @returns {Object} packaged token response
+     */
+    this.createTokens = (data) => {
+        const access_token = jwt.sign(
+            { _id: data['_id'], iat: Math.floor(Date.now() / 1000)},
+            process.env.ACCESS_TOKEN_SECRET,
+            {expiresIn: '6h'}
+        );
+        const refresh_token = jwt.sign(
+            { email: data['email'], password: data['password'], iat: Math.floor(Date.now() /1000)},
+            process.env.REFRESH_TOKEN_SECRET,
+            {expiresIn: '14d'}
+        );
+
+        const tokens = {
+            'access_token': access_token,
+            'refresh_token': refresh_token
         }
-        return body;
+        return tokens;
     }
 
     /**
@@ -180,12 +199,11 @@ const Utils = function () {
         // Valid body?
         validGeneric(req, res, null, format);
 
-        // Valid email
+        // Valid email?
         // Parameters received from: https://www.w3resource.com/javascript/form/email-validation.php
         const regEmail = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")
         if (!regEmail.test(req.body.email)) {
-            res.status(400)
-                .send(this.errorBody("Email address is already in use"));
+            res.status(400).send(this.errorBody("Email address is already in use"));
             return;
         }
 
