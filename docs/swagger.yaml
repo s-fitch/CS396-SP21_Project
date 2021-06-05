@@ -272,6 +272,11 @@ paths:
         required: true
         schema:
           type: string
+      - name: count
+        in: query
+        description: Maximum number of results to return
+        schema:
+          type: number
       responses:
         200:
           description: Successfully queried for communites
