@@ -143,7 +143,7 @@ const Utils = function () {
             if (err) {
                 // Invalid token
                 res.status(403)
-                    .send(this.errorBody('Invalid authorization token rpovided'));
+                    .send(this.errorBody('Invalid authorization token provided'));
                 return;
             }
             req.user = decoded;
@@ -210,6 +210,14 @@ const Utils = function () {
         next();
 
     }
+    /**
+     * Validate and parse Refresh token included in request body
+     * @param {Object} req Express routing request object 
+     * @param {Object} res Express routing response object 
+     * @param {*} next 
+     * @returns 
+     */
+    this.validRefresh = (req, res, next) => validGeneric(req, res, next, this.formatRefresh);
     /**
      * Validate and parse Community included in request body
      * @param {Object} req Express routing request object 

@@ -18,7 +18,11 @@ const axios = require("axios");
 const Utils = function () {
     this.resetDB = resetDB;
 
-    this.fixtures = {};
+    this.access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDc1MDI5Zjc0NmUzZjM4YTVmMGU5NDYiLCJpYXQiOjE2MjI3ODIzODh9.xTCfjMye-GY-NNQ_XqbwOQwJYD1DL6c4xnllB6nXHWc";
+    this.refresh_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHRlc3QuY29tIiwicGFzc3dvcmQiOiI4YzY5NzZlNWI1NDEwNDE1YmRlOTA4YmQ0ZGVlMTVkZmIxNjdhOWM4NzNmYzRiYjhhODFmNmYyYWI0NDhhOTE4IiwiaWF0IjoxNjIyNzgyMzg4fQ.FoyWIkOUyWhpVUQe0HZYHztf31UgfSzA2w39mFtJ35I";
+    this.expired_access = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDc1MDI5Zjc0NmUzZjM4YTVmMGU5NDYiLCJpYXQiOjE2MjI3ODIzODgsImV4cCI6MTYyMjc4MjM4OX0.fEbbkRHz-8dqEuc1SX6FoEXlmYwjbdrv9dYMo3QjX7M";
+    this.expired_refresh = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHRlc3QuY29tIiwicGFzc3dvcmQiOiI4YzY5NzZlNWI1NDEwNDE1YmRlOTA4YmQ0ZGVlMTVkZmIxNjdhOWM4NzNmYzRiYjhhODFmNmYyYWI0NDhhOTE4IiwiaWF0IjoxNjIyODY0NDYzLCJleHAiOjE2MjI4NjQ0NjR9.fwK_NUSpjWYVy3VyTE9jKuaDng1E9qq4eUHBw5w91ns";
+
 
     this.mockAccount = {
         email: "fake@notrealwebsite.com",
@@ -36,7 +40,10 @@ const Utils = function () {
     this.mockReport = {
         category: 1,
         detail: "This made me upset"
-    }
+    };
+    this.mockRefresh = {
+        refresh_token: this.refresh_token
+    };
     this.badId = "this_id_doesnt_conform";
     this.mockId = "FakeIdthatHasToBe24Chars";
 
@@ -44,10 +51,6 @@ const Utils = function () {
     this.testCommunity = data.communities[0];
     this.testQuestion = data.questions[0];
     this.testAnswer = data.answers[0];
-
-    this.access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDc1MDI5Zjc0NmUzZjM4YTVmMGU5NDYiLCJpYXQiOjE2MjI3ODIzODh9.xTCfjMye-GY-NNQ_XqbwOQwJYD1DL6c4xnllB6nXHWc";
-    this.refresh_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHRlc3QuY29tIiwicGFzc3dvcmQiOiI4YzY5NzZlNWI1NDEwNDE1YmRlOTA4YmQ0ZGVlMTVkZmIxNjdhOWM4NzNmYzRiYjhhODFmNmYyYWI0NDhhOTE4IiwiaWF0IjoxNjIyNzgyMzg4fQ.FoyWIkOUyWhpVUQe0HZYHztf31UgfSzA2w39mFtJ35I";
-    this.expired_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDc1MDI5Zjc0NmUzZjM4YTVmMGU5NDYiLCJpYXQiOjE2MjI3ODIzODgsImV4cCI6MTYyMjc4MjM4OX0.fEbbkRHz-8dqEuc1SX6FoEXlmYwjbdrv9dYMo3QjX7M";
 
     this.formatToken = {
         access_token: "string",

@@ -15,7 +15,7 @@ const Report = require("./schema/Report");
 const {
     createTokens, authenticateToken, errorBody, error500, handleReport, handleVote,
     existsCommunity, existsQuestion, existsAnswer, 
-    validAccountLogin, validCommunity, validQuestion, validAnswer, validReport
+    validAccountLogin, validRefresh, validCommunity, validQuestion, validAnswer, validReport
 } = utils;
 
 const notImplemented = {
@@ -110,10 +110,38 @@ router.route("/account/login")
     })
 
 router.route("/account/refresh")
-    .post((req, res) => {
+    .post(validRefresh, (req, res) => {
         console.log("POST /account/refresh");
 
-        res.status(200).send(notImplemented);
+        jwt.verify(req.body.refresh_token, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+            if (err) {
+                // Invalid token
+                res.status(403)
+                    .send(errorBody('Invalid refresh token provided'));
+                return;
+            }
+
+            Account.findOne({email: decoded.email})
+                .then(data => {
+                    if (!data || data.password != decoded.password) {
+                        // Login failed
+                        res.status(403).send(errorBody('Invalid username or password'));
+                        return;
+                    }
+
+                    res.status(200).send(createTokens(data));
+                    return;
+
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.status(500).send(error500);
+                    return;
+                })
+
+        })
+
+        
 
     })
 

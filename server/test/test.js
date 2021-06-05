@@ -37,6 +37,7 @@ const {
 const asserttype = require("chai-asserttype");
 const axios = require("axios");
 const chai = require("chai");
+const { isToken } = require("./util/testUtil");
 
 chai.use(asserttype);
 const expect = chai.expect;
@@ -50,7 +51,7 @@ const validHeader = {
 }
 const invalidHeader = {
     headers: {
-        Authorization: 'Bearer ' + utils.expired_token
+        Authorization: 'Bearer ' + utils.expired_access
     }
 }
 
@@ -124,6 +125,39 @@ describe("/account", function () {
                 })
         })
     })
+})
+
+describe("/account/refresh", function () {
+    this.timeout(TIMEOUT);
+
+    this.beforeEach(done => {
+        resetDB(done);
+    });
+
+    describe("POST", () => {
+        it("should update access tokens", done => {
+            axios.post(route('/account/refresh'), utils.mockRefresh, invalidHeader)
+                .then(response => {
+                    expect(response.status).to.equal(200);
+                    expect(utils.isToken(response.data)).to.be.true;
+                    done()
+                })
+                .catch(err => done(err))
+        })
+
+        it("should fail for invalid refresh token", done => {
+            axios.post(route('/account/refresh'), {refresh_token: utils.expired_refresh})
+                .then(response => {
+                    expect(response.status).to.equal(403);
+                    expect(isError(response.body)).to.be.true;
+                    done();
+                })
+                .catch(err => {
+                    (err.response && err.response.status==403) ? done() : done(err);
+                })
+        })
+    })
+
 })
 
 describe("/account/feed", function () {
