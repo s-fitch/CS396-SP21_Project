@@ -413,10 +413,12 @@ const Utils = function () {
                         Answer.findByIdAndUpdate(req.answer._id, scoreChange)
                         .then(data => {
                             res.status(204).send();
+                            return;
                         })
                         .catch(err => {
                             console.log(err);
                             res.status(500).send(error500);
+                            return;
                         })
                     })
             })

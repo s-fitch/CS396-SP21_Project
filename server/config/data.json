@@ -23,6 +23,12 @@
             "name": "Test Community",
             "description": "This is just used for testing. If you're seeing this, I did something wrong.",
             "moderators": ["6075029f746e3f38a5f0e947"]
+        }, 
+        {
+            "_id": "6075029f746e3f38a5f0e048",
+            "name": "Second Community",
+            "description": "We're number 2!",
+            "moderators": ["6075029f746e3f38a5f0e947"]
         }
     ],
     "questions": [

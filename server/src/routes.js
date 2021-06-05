@@ -32,6 +32,7 @@ router.route("/")
         res.status(200).send({
             data: "App is running."
         });
+        return;
     });
 
 
@@ -199,15 +200,30 @@ router.route("/c")
             })
             .catch(err => {
                 res.status(500).send(error500);
+                return;
             })
 
     });
 
 router.route("/c/search")
-    .post((req, res) => {
-        console.log("POST /c/search");
+    .get((req, res) => {
+        console.log("POST /c/search"); 
 
-        res.status(200).send(notImplemented);
+        if (!req.query.terms) {
+            res.status(400).send(errorBody("Query paramter 'terms' must be included with request"));
+            return;
+        }
+
+        Community.find({ name: { $regex: req.query.terms, $options: "i" }})
+            .then(data => {
+                res.status(200).send(data);
+                return;
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(error500);
+                return;
+            })
 
     });
 
@@ -222,6 +238,7 @@ router.route("/c/:commId")
         console.log(`PATCH /c/${req.params.commId}`);
 
         res.status(200).send(notImplemented);
+        return;
 
     });
 
@@ -237,9 +254,11 @@ router.route("/c/:commId/feed")
                     questions: data
                 }
                 res.status(200).send(body);
+                return;
             })
             .catch(err => {
                 res.status(500).send(error500);
+                return;
                 })
 
     });

@@ -257,6 +257,38 @@ describe("/c",  function() {
     })
 })
 
+describe("/c/search", function () {
+    this.timeout(TIMEOUT);
+
+    this.beforeEach(done => {
+        resetDB(done);
+    });
+
+    describe("GET", () => {
+        it('should return search results', done => {
+            axios.get(route('/c/search?terms=Test+Community'))
+                .then(response => {
+                    expect(response.status).to.equal(200);
+                    expect(response.data.length).to.equal(1);
+                    done();
+                })
+                .catch(err => err);
+        })
+
+        it("should error on missing query terms", done => {
+            axios.get(route('/c/search?terms='))
+                .then(response => {
+                    expect(response.status).to.equal(400);
+                    expect(isError(response.data)).to.be.true;
+                    done();
+                })
+                .catch(err => {
+                    (err.response && err.response.status==400) ? done() : done(err);
+                })
+        })
+    })
+})
+
 describe("/c/:commId", function () {
     this.timeout(TIMEOUT);
 
