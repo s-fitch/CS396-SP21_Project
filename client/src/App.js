@@ -5,12 +5,12 @@ import Header from './Header';
 import Body from './Body';
 
 class App extends React.Component {
-  render () {
+    render () {
     return (
-      <div style={{height: '100vh'}}>
+    <div style={{height: '100vh'}}>
         <Header />
         <Body />
-      </div>
+    </div>
     )
   }
 }
