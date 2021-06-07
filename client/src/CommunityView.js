@@ -1,4 +1,5 @@
 import React from 'react';
+import CommunityFeed from './CommunityFeed';
 
 class CommunityView extends React.Component{
     constructor(props) {
@@ -6,45 +7,33 @@ class CommunityView extends React.Component{
 
         this.state = {
             communityInfo: null,
-            feed: []
+            feed: [],
+            question: null,
+
         }
+        this.selectQuestion = this.selectQuestion.bind(this);
     }
+
+
     render () {
         if (!this.props.community) {
             return null;
         } 
 
-        let communityHeader = null;
-        if (this.state.communityInfo) {
-            communityHeader = (
-                <div className='container-fluid bg-info'>
-                    <h3>{this.state.communityInfo.name}</h3>
-                    <p><small>{this.state.communityInfo.description}</small></p>
-                </div>
+        if (true) {
+            return (
+                <CommunityFeed
+                    communityInfo={this.state.communityInfo}
+                    feed={this.state.feed}
+                    selectQuestion={this.selectQuestion}
+                    />
             )
         }
-
-        let feedList = this.state.feed.map(q => (
-            <li 
-                className="list-group-item bg-warning" 
-                key={q._id} 
-                id={q._id}>
-                    {q.title}
-            </li>
-        ))
-
-        return (
-        <div className="col" style={{height: "100%"}}>
-            {communityHeader}
-            <ul className="list-group list-group-flush">
-                {feedList}
-            </ul>
-        </div>
-        )
+        
+        
     }
 
     componentDidMount () {
-        
         if (this.props.community) {
             this.updateInfo();
             this.updateFeed();
@@ -52,7 +41,7 @@ class CommunityView extends React.Component{
     }
 
     componentDidUpdate (prevProps) {
-        if (prevProps.community !== this.props.community) {
+        if (this.props.community && prevProps.community !== this.props.community) {
             this.updateInfo();
             this.updateFeed();
         }
@@ -95,6 +84,13 @@ class CommunityView extends React.Component{
             })
         })
         .catch(err => console.log(err))
+    }
+
+    selectQuestion (ev) {
+        console.log(`Selected ${ev.target.id}`)
+        this.setState({
+            question: ev.target.id
+        })
     }
 }
 

@@ -16,8 +16,10 @@ class Body extends React.Component {
                         tokens={this.props.tokens}
                         selectCommunity={this.props.selectCommunity}/>
                 </div>
-                <CommunityView 
-                    community={this.props.community}/>
+                <div className="col" style={{maxHeight: "100%", overflow: 'hidden'}}>
+                    <CommunityView 
+                        community={this.props.community}/>
+                </div>
             </div>
         )
     } else {
