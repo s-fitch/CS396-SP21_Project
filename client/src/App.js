@@ -41,6 +41,8 @@ class App extends React.Component {
         this.getTokensFromCookie = this.getTokensFromCookie.bind(this);
         this.setTokensInCookie = this.setTokensInCookie.bind(this);
         this.clearTokensFromCookie = this.clearTokensFromCookie.bind(this);
+
+        this.selectCommunity = this.selectCommunity.bind(this);
     }
 
     render () {
@@ -54,7 +56,8 @@ class App extends React.Component {
                         showLogin = {this.showLogin}/>
                     <Body 
                         tokens = {this.state.tokens}
-                        community = {this.state.community}/>
+                        community = {this.state.community}
+                        selectCommunity={this.selectCommunity}/>
                 </div>
                 );
             case 1:
@@ -130,9 +133,9 @@ class App extends React.Component {
         })
     }
 
-    selectCommunity (commId) {
+    selectCommunity (ev) {
         this.setState({
-            community: commId
+            community: ev.target.id
         });
     }
     

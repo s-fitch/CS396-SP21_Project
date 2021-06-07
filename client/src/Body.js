@@ -13,9 +13,11 @@ class Body extends React.Component {
             <div className="row" style={{flexWrap:"nowrap", height: "100%"}}>
                 <div className="col" style={{minWidth: "200px", padding: "0px", maxWidth:"200px"}}>
                     <CommunityList 
-                        tokens={this.props.tokens}/>
+                        tokens={this.props.tokens}
+                        selectCommunity={this.props.selectCommunity}/>
                 </div>
-                <CommunityView />
+                <CommunityView 
+                    community={this.props.community}/>
             </div>
         )
     } else {

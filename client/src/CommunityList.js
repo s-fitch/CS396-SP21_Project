@@ -12,7 +12,14 @@ class CommunityList extends React.Component {
     render () {
 
         const communityList = this.state.communities.map(comm => (
-            <button type="button" className="btn btn-light btn-block" key={comm._id}>{comm.name}</button>
+            <button 
+                type="button" 
+                className="btn btn-light btn-block" 
+                key={comm._id}
+                id={comm._id}
+                onClick={this.props.selectCommunity}>
+                    {comm.name}
+            </button>
         ))
 
         return (
