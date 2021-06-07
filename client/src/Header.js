@@ -11,6 +11,8 @@ class Header extends React.Component {
             <div className="container-fluid">
                 <HeaderLogo />
                 <Account 
+                    tokens={this.props.tokens}
+                    logout={this.props.logout}
                     showLogin={this.props.showLogin}/>
             </div>
         </nav>
