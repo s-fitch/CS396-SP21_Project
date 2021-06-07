@@ -380,7 +380,7 @@ router.route("/c/:commId/q/:quesId")
                 answers.forEach(answer => {
                     delete answer.author
                 });
-                question.answers = answers;
+                question.answers = answers.reverse();
 
                 res.status(200).send(question);
                 return;
