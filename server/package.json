@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=development mocha --exit",
-    "dev_start": "cross-env NODE_ENV=development nodemon index.js",
-    "dev_populate": "cross-env NODE_ENV=development node ./config/scripts/execPopulateDB.js",
-    "prod_populate": "cross-env NODE_ENV=production node ./config/scripts/execPopulateDB.js",
-    "prod_start": "cross-env NODE_ENV=production nodemon index.js"
+    "dev-start": "cross-env NODE_ENV=development nodemon index.js",
+    "dev-populate": "cross-env NODE_ENV=development node ./config/scripts/execPopulateDB.js",
+    "prod-populate": "cross-env NODE_ENV=production node ./config/scripts/execPopulateDB.js",
+    "prod-start": "cross-env NODE_ENV=production nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,9 @@
   "homepage": "https://github.com/s-fitch/CS396-SP21_Project#readme",
   "dependencies": {
     "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
+    "chai": "^4.3.4",
+    "chai-asserttype": "^1.0.5",
     "cross-env": "^7.0.3",
     "crypto": "^1.0.1",
     "dotenv": "^10.0.0",
