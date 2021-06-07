@@ -11,13 +11,14 @@ class Body extends React.Component {
         // Logged in
         content = (
             <div className="row" style={{flexWrap:"nowrap", height: "100%"}}>
-                <div className="col" style={{minWidth: "200px", padding: "0px", maxWidth:"200px"}}>
+                <div className="col bg-light" style={{minHeight: "100%", maxHeight: "100%", minWidth: "200px", padding: "0px", maxWidth:"200px"}}>
                     <CommunityList 
                         tokens={this.props.tokens}
                         selectCommunity={this.props.selectCommunity}/>
                 </div>
-                <div className="col" style={{maxHeight: "100%", overflow: 'hidden'}}>
+                <div className="col" style={{minHeight: "100%", maxHeight: "100%", overflow: 'hidden'}}>
                     <CommunityView 
+                        tokens={this.props.tokens}
                         community={this.props.community}/>
                 </div>
             </div>
@@ -33,7 +34,7 @@ class Body extends React.Component {
     }
 
     return (
-        <div className="container-fluid bg-success" style={{height: "90vh"}}>
+        <div className="container-fluid" style={{height: "90vh"}}>
             {content}
         </div>
     )

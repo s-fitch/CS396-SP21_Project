@@ -12,20 +12,20 @@ class CommunityList extends React.Component {
     render () {
 
         const communityList = this.state.communities.map(comm => (
-            <button 
-                type="button" 
-                className="btn btn-light btn-block" 
+            <a 
+                href="#" 
+                className="list-group-item list-group-item-action" 
                 key={comm._id}
                 id={comm._id}
                 onClick={this.props.selectCommunity}>
                     {comm.name}
-            </button>
+            </a>
         ))
 
         return (
-            <div className="container-fluid bg-white" style={{height: '100%', overflowY: "auto"}}>
+            <ul className="list-group" style={{height: '100%', overflowY: "auto"}}>
                 {communityList}
-            </div>
+            </ul>
         )
     }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import CommunityFeed from './CommunityFeed';
+import QuestionView from './QuestionView';
 
 class CommunityView extends React.Component{
     constructor(props) {
@@ -12,6 +13,7 @@ class CommunityView extends React.Component{
 
         }
         this.selectQuestion = this.selectQuestion.bind(this);
+        this.closeQuestion = this.closeQuestion.bind(this);
     }
 
 
@@ -20,7 +22,7 @@ class CommunityView extends React.Component{
             return null;
         } 
 
-        if (true) {
+        if (!this.state.question) {
             return (
                 <CommunityFeed
                     communityInfo={this.state.communityInfo}
@@ -29,6 +31,14 @@ class CommunityView extends React.Component{
                     />
             )
         }
+
+        return (
+            <QuestionView 
+                community={this.props.community}
+                question={this.state.question}
+                tokens={this.props.tokens}
+                close={this.closeQuestion}/>
+        )
         
         
     }
@@ -41,9 +51,14 @@ class CommunityView extends React.Component{
     }
 
     componentDidUpdate (prevProps) {
-        if (this.props.community && prevProps.community !== this.props.community) {
-            this.updateInfo();
-            this.updateFeed();
+        if (prevProps.community !== this.props.community) {
+            this.setState({
+                question: null
+            })
+            if (this.props.community) {
+                this.updateInfo();
+                this.updateFeed();
+            }
         }
 
     }
@@ -87,9 +102,14 @@ class CommunityView extends React.Component{
     }
 
     selectQuestion (ev) {
-        console.log(`Selected ${ev.target.id}`)
+        console.log(`Selected ${ev.target.closest('a').id}`)
         this.setState({
-            question: ev.target.id
+            question: ev.target.closest('a').id
+        })
+    }
+    closeQuestion (ev) {
+        this.setState({
+            question: null
         })
     }
 }
