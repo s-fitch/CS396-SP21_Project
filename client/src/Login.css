@@ -1,0 +1,19 @@
+form {
+    border: solid 2px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    width: 400px;
+    padding: 20px;
+    margin: auto;
+}
+
+form button {
+    width: 100%;
+}
+
+form span {
+    font-size: small;
+}
+
+form span a {
+    margin-left: 3px;
+}

@@ -7,11 +7,11 @@ class Body extends React.Component {
   render () {
     return (
       <div className="container-fluid bg-success" style={{height: "90vh"}}>
-          <div class="row" style={{flexWrap:"nowrap", height: "100%"}}>
-              <div class="col" style={{minWidth: "200px", padding: "0px", maxWidth:"200px"}}>
+          <div className="row" style={{flexWrap:"nowrap", height: "100%"}}>
+              <div className="col" style={{minWidth: "200px", padding: "0px", maxWidth:"200px"}}>
                   <CommunityList />
               </div>
-              <div class="col">
+              <div className="col">
                   Col2
               </div>
           </div>

@@ -149,7 +149,7 @@ describe("/account/refresh", function () {
             axios.post(route('/account/refresh'), {refresh_token: utils.expired_refresh})
                 .then(response => {
                     expect(response.status).to.equal(403);
-                    expect(isError(response.body)).to.be.true;
+                    expect(isError(response.data)).to.be.true;
                     done();
                 })
                 .catch(err => {
@@ -182,7 +182,7 @@ describe("/account/feed", function () {
             axios.get(route('/account/feed'), invalidHeader)
                 .then(response => {
                     expect(response.status).to.equal(403);
-                    expect(isError(response.body)).to.be.true;
+                    expect(isError(response.data)).to.be.true;
                     done();
                 })
                 .catch(err => {
@@ -253,6 +253,20 @@ describe("/c",  function() {
                 .catch(err => {
                     (err.response && err.response.status == 400) ? done() : done(err);    
                 })
+        })
+
+        it('should handle extra request body parameters', done => {
+            const extraBody = {}
+            Object.keys(utils.mockCommunity).forEach(prop => extraBody[prop]=utils.mockCommunity[prop]);
+            extraBody.foo = "baz"
+            axios.post(route('/c'), extraBody, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(201);
+                    expect(simplify(response.data)).to.eql(simplify(utils.mockCommunity));
+                    expect(Object.keys(response.data)).to.not.include('foo');
+                    done();
+                })
+                .catch(err => done(err))
         })
     })
 })
@@ -559,6 +573,262 @@ describe('/c/:commId/q/:quesId', function() {
     })
 })
 
+
+describe('/c/:commId/q/:quesId/a', function() {
+    this.timeout(TIMEOUT);
+
+    this.beforeEach(done => {
+        resetDB(done);
+    })
+
+    describe("POST", () => {
+        it("should create a new answer", done => {
+            axios.post(route(`/c/${utils.testCommunity._id}/q/${utils.testQuestion._id}/a`), utils.mockAnswer, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(204);
+                    done()
+                })
+                .catch(err => done(err))
+        })
+
+        it("should error on missing body", done => {
+            axios.post(route(`/c/${utils.testCommunity._id}/q/${utils.testQuestion._id}/a`), null, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(400);
+                    expect(isError(response.data)).to.be.true;
+                    done();
+                })
+                .catch(err => {
+                    (err.response && err.response.status==400) ? done() : done(err);
+                })
+        })
+
+        it("should error on invalid body", done => {
+            axios.post(route(`/c/${utils.testCommunity._id}/q/${utils.testQuestion._id}/a`), {foo: "baz"}, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(400);
+                    expect(isError(response.data)).to.be.true;
+                    done();
+                })
+                .catch(err => {
+                    (err.response && err.response.status==400) ? done() : done(err);
+                })
+        })
+    })
+})
+
+const answerEndpointBase = `/c/${utils.testCommunity._id}/q/${utils.testQuestion._id}/a/${utils.testAnswer._id}`;
+
+describe('/c/:commId/q/:quesId/a/:answId/upvote', function () {
+    this.timeout(TIMEOUT);
+
+    this.beforeEach(done => {
+        resetDB(done);
+    });
+
+    describe("POST", () => {
+        it("should increase answer score", done => {
+            // 1. Check initial score
+            Answer.findById(utils.testAnswer._id)
+                .then(data => {
+                    const initialScore = data.score;
+
+                    // 2. Upvote
+                    axios.post(route(answerEndpointBase+"/upvote"), null, validHeader)
+                        .then(response => {
+                            expect(response.status).to.equal(204);
+
+                            // 3. Check new score
+                            Answer.findById(utils.testAnswer._id)
+                                .then(data => {
+                                    expect(data.score).to.equal(initialScore+1);
+                                    done();
+                                })
+                                .catch(err => done(err))
+
+
+                        })
+                        .catch(err => done(err))
+                })
+                .catch(err => done(err))
+            
+        })
+        it("should add question to user upvotes", done => {
+            // 1. Check initial upvotes
+            Account.findById(utils.testAccount._id)
+                .then(data => {
+                    const initialUpvotes = data.upvotes;
+                    expect(initialUpvotes).to.not.include(utils.testAnswer._id);
+
+                    // 2. Upvote
+                    axios.post(route(answerEndpointBase+'/upvote'), null, validHeader)
+                        .then(response => {
+                            expect(response.status).to.equal(204);
+
+                            // 3. Check included in upvotes
+                            Account.findById(utils.testAccount._id)
+                                .then(data => {
+                                    expect(data.upvotes).to.include(utils.testAnswer._id);
+                                    done();
+                                })
+                                .catch(err => done(err))
+
+                        })
+                        .catch(err => done(err))
+
+                })
+                .catch(err => done(err))
+        })
+        it("should not change score for duplicate upvotes by single user", done => {
+            // 1. Upvote
+            axios.post(route(answerEndpointBase+'/upvote'), null, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(204);
+
+                    // 2. Get initial score
+                    Answer.findById(utils.testAnswer._id)
+                        .then(data => {
+                            const initialScore = data.score;
+
+                            // 3. Make duplicate upvote
+                            axios.post(route(answerEndpointBase+'/upvote'), null, validHeader)
+                                .then(response => {
+                                    expect(response.status).to.equal(204);
+
+                                    // 4. Check new score
+                                    Answer.findById(utils.testAnswer._id)
+                                        .then(data => {
+                                            expect(data.score).to.equal(initialScore);
+                                            done();
+                                        })
+                                        .catch(err => done(err))
+
+                                })
+                                .catch(err => done(err))
+
+                        })
+                        .catch(err => done(err))
+                })
+                .catch(err => done(err))
+        })
+        it("should not create duplicate upvotes entires for single user", done => {
+            // 1. Upvote
+            axios.post(route(answerEndpointBase+'/upvote'), null, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(204);
+
+                    // 2. Get initial upvotes
+                    Account.findById(utils.testAccount._id)
+                        .then(data => {
+                            const initialUpvotes = data.upvotes
+                            expect(initialUpvotes).to.include(utils.testAnswer._id);
+
+                            // 3. Make extra upvote
+                            axios.post(route(answerEndpointBase+'/upvote'), null, validHeader)
+                                .then(response => {
+                                    expect(response.status).to.equal(204);
+
+                                    // 4. Check new upvotes
+                                    Account.findById(utils.testAccount._id)
+                                        .then(data => {
+                                            expect(data.upvotes.length).to.equal(initialUpvotes.length);
+                                            done();
+                                        })
+                                        .catch(err => done(err))
+
+                                })
+                                .catch(err => done(err))
+
+                        })
+                        .catch(err => done(err))
+
+                })
+                .catch(err => done(err))
+        })
+        it("should error on nonexistent answer", done => {
+            axios.post(route(`/c/${utils.testCommunity._id}/q/${utils.testQuestion._id}/a/${utils.mockId}/upvote`), null, validHeader)
+                .then(response => {
+                    expect(response.status).to.be(404);
+                    expect(isError(response.data)).to.be.true;
+                    done();
+                })
+                .catch(err => {
+                    (err.response && err.response.status==404) ? done() : done(err);
+                })
+        })
+    })
+    describe("DELETE", () => {
+        it("should decrease answer score if already upvoted", done => {
+            // 1. Upvote
+            axios.post(route(answerEndpointBase+'/upvote'), null, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(204);
+
+                    // 2. Get initial score
+                    Answer.findById(utils.testAnswer._id)
+                        .then(data => {
+                            const initialScore = data.score;
+                            console.log(initialScore);
+
+                            // 3. Delete upvote
+                            axios.delete(route(answerEndpointBase+'/upvote'), validHeader)
+                                .then(response => {
+                                    expect(response.status).to.equal(204);
+
+                                    // 4. Check new score
+                                    Answer.findById(utils.testAnswer._id)
+                                        .then(data => {
+                                            expect(data.score).to.equal(initialScore-1);
+                                            done();
+                                        })
+                                        .catch(err => done(err))
+
+                                })
+                                .catch(err => done(err))
+
+                        })
+                        .catch(err => done(err))
+                    
+                })
+                .catch(err => done(err))
+        })
+
+        it("should remove answer from user upvotes if already upvoted", done => {
+            // 1. Upvote
+            axios.post(route(answerEndpointBase+'/upvote'), null, validHeader)
+                .then(response => {
+                    expect(response.status).to.equal(204);
+
+                    // 2. Check initial upvotes
+                    Account.findById(utils.testAccount._id)
+                        .then(data => {
+                            expect(data.upvotes).to.include(utils.testAnswer._id);
+
+                            // 3. Delete upvote
+                            axios.delete(route(answerEndpointBase+'/upvote'), validHeader)
+                                .then(response => {
+                                    expect(response.status).to.equal(204);
+
+                                    // 4. Check new upvotes
+                                    Account.findById(utils.testAccount._id)
+                                        .then(data => {
+                                            expect(data.upvotes).to.not.include(utils.testAnswer._id);
+                                            done();
+                                        })
+                                        .catch(err => done(err))
+
+                                })
+                                .catch(err => done(err))
+
+                        })
+                        .catch(err => done(err))
+
+                })
+                .catch(err => done(err))
+        })
+        //it("should not change score if not upvoted")
+    })
+})
 
 describe('/c/:commId/report', function() {
     this.timeout(TIMEOUT);
