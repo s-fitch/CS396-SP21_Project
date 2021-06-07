@@ -105,7 +105,7 @@ router.route("/account/login")
                     return;
                 }
 
-                utils.checkPassword(req.body.password, data.password, res, (reuslt) => {
+                utils.checkPassword(req.body.password, data.password, res, (result) => {
                     if (!result) {
                         // Invalid password
                         res.status(403).send(errorBody('Invalid email or password'))
@@ -275,7 +275,7 @@ router.route("/c/:commId/feed")
             .then(data => {
                 const body = {
                     num_returned: data.length,
-                    questions: data
+                    questions: data.reverse()
                 }
                 res.status(200).send(body);
                 return;
