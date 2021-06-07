@@ -219,8 +219,19 @@ router.route("/c")
 
         Community.create(req.body).save()
             .then(data => {
-                res.status(201).send(data);
-                return;
+
+                Account.findByIdAndUpdate(req.user._id, {
+                    $addToSet: { communities: data._id }})
+                    .then(response => {
+                        res.status(201).send(data);
+                        return;
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).send(error500);
+                        return;
+                    })
+
             })
             .catch(err => {
                 res.status(500).send(error500);
