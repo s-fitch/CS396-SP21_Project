@@ -14,6 +14,7 @@ class CommunityView extends React.Component{
         }
         this.selectQuestion = this.selectQuestion.bind(this);
         this.closeQuestion = this.closeQuestion.bind(this);
+        this.updateFeed = this.updateFeed.bind(this);
     }
 
 
@@ -28,6 +29,8 @@ class CommunityView extends React.Component{
                     communityInfo={this.state.communityInfo}
                     feed={this.state.feed}
                     selectQuestion={this.selectQuestion}
+                    tokens={this.props.tokens}
+                    updateFeed={this.updateFeed}
                     />
             )
         }

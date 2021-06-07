@@ -167,9 +167,9 @@ class QuestionView extends React.Component {
         
         return (
         <form className="container-fluid card">
-            <div class="mb-3">
+            <div className="mb-3">
                 <textarea 
-                    class="form-control" 
+                    className="form-control" 
                     rows="3" 
                     placeholder="Write your answer..."
                     onChange={this.handleChange}></textarea>
