@@ -47,40 +47,41 @@ router.route("/account")
     .post(validAccountLogin, (req, res) => {
         console.log("POST /account");
 
-        const body = req.body;
-
-
-        Account.exists({email: body.email}, (err, doc) => {
+        Account.exists({email: req.body.email}, (err, doc) => {
             if (err) {
+                // Error in request
                 console.log(err);
                 res.status(500).send(error500);
                 return;
-            } else {
-                if (doc) {
-                    // Email already in use
-                    res.status(400).send(errorBody(`Email address ${body['email']} is already in use`));
-                    return;
-                }
-
-                // Create account
-                body['communities'] = [];
-                body['upvotes'] = [];
-                body['downvotes'] = [];
-
-                Account.create(body).save()
-                    .then(data => {
-                        // Return JWT
-                        data.password = body.password;
-                        res.status(201).send(createTokens(data));
-                        return;
-
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        res.status(500).send(error500);
-                        return;
-                    })
+            } 
+            if (doc) {
+                // Email already in use
+                res.status(400).send(errorBody(`Email address ${req.body.email} is already in use`));
+                return;
             }
+
+            utils.hashPassword(req.body.password, res, (hash) => {
+                    const body = {
+                        email: req.body.email,
+                        password: hash,
+                        communities: [],
+                        upvotes: [],
+                        downvotes: []
+                    }
+
+                    Account.create(body).save()
+                        .then(data => {
+                            // Respond with JWT
+                            res.status(201).send(createTokens(data));
+                            return;
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            res.status(500).send(error500);
+                            return;
+                        })
+                })
+            
         })
 
     })
@@ -93,20 +94,35 @@ router.route("/account")
 
 router.route("/account/login")
     .post(validAccountLogin, (req, res) => {
-        console.log("POST /account/login");      
+        console.log("POST /account/login");  
+        
 
         Account.findOne({email: req.body.email})
             .then(data => {
-                if (!data || data.password != req.body.password) {
-                    // Login failed
-                    res.status(403).send(errorBody('Invalid username or password'));
+                if (!data) {
+                    // No email associated with account
+                    res.status(403).send(errorBody('Invalid email or password'));
                     return;
                 }
 
-                res.status(200).send(createTokens(data));
-                return;
+                utils.checkPassword(req.body.password, data.password, res, (reuslt) => {
+                    if (!result) {
+                        // Invalid password
+                        res.status(403).send(errorBody('Invalid email or password'))
+                        return
+                    }
 
-            })      
+                    // Generate JWT
+                    res.status(200).send(createTokens(data));
+                    return;
+                });
+
+            }) 
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(error500);
+                return;
+            })     
 
     })
 
@@ -124,14 +140,22 @@ router.route("/account/refresh")
 
             Account.findOne({email: decoded.email})
                 .then(data => {
-                    if (!data || data.password != decoded.password) {
-                        // Login failed
-                        res.status(403).send(errorBody('Invalid username or password'));
+                    if (!data) {
+                        // No email associated with account
+                        res.status(403).send(errorBody('Invalid email or password'));
                         return;
                     }
+                    
+                    utils.checkPassword(decoded.password, data.password, res, (result) => {
+                        if (!result) {
+                            // Invalid password
+                            res.status(403).send(errorBody('Invalid email or password'))
+                        }
 
-                    res.status(200).send(createTokens(data));
-                    return;
+                        // Generate JWT
+                        res.status(200).send(createTokens(data));
+                        return;
+                    })
 
                 })
                 .catch(err => {

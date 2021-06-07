@@ -1,5 +1,6 @@
 require("dotenv").config()
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const Account = require('./schema/Account');
 const Community = require('./schema/Community');
@@ -150,6 +151,32 @@ const Utils = function () {
             req.user = decoded;
             next();
         })
+    }
+    /**
+     * Hash account password
+     * @param {Object} req Express routing request object 
+     * @param {Object} res Express routing response object 
+     * @param {*} next 
+     */
+    this.hashPassword = (password, res, next) => {
+        bcrypt.hash(password, 10)
+            .then(hash => {
+                next(hash);
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(this.error500);
+                return;
+            })
+    }
+    this.checkPassword = (password, hash, res, next) => {
+        bcrypt.compare(password, hash)
+            .then(result => next(result))
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(this.error500);
+                return;
+            })
     }
 
 
