@@ -18,7 +18,8 @@ class CommunityFeed extends React.Component {
         return (
         <div className="col" style={{height: "100%", overflowY: "auto"}}>
             {this.genCommunityHeader()}
-            <div className="container-fluid">
+            <div className="container-fluid d-flex justify-content-between align-items-center">
+                <h5>Questions</h5>
                 {this.genQuestionButton()}
             </div>
             <QuestionForm
@@ -46,6 +47,7 @@ class CommunityFeed extends React.Component {
             );
         }
     }
+
     genFeedList() {
         return (this.props.feed.map(q => (
             <a 
