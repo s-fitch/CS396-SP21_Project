@@ -4,7 +4,7 @@ const Account = require("../../src/schema/Account");
 const Community = require("../../src/schema/Community");
 const Question = require("../../src/schema/Question");
 const Answer = require("../../src/schema/Answer");
-const data = require("../data.json");
+const data = require("../populateData.json");
 require("dotenv").config();
 
 const env = "" + process.env.NODE_ENV;

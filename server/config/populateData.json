@@ -3,7 +3,7 @@
         {
             "_id": "6075029f746e3f38a5f0e946",
             "email": "admin@test.com",
-            "password": "admin",
+            "password": "$2b$10$/Ffa4hCq6iV/gQIycemkveFGDlxawfRGw7b81GsMyf3Nw4veHETN.",
             "communities": [],
             "upvotes": [],
             "downvotes": []
@@ -12,7 +12,7 @@
             "_id": "6075029f746e3f38a5f0e947",
             "email": "user1@test.com",
             "communities": ["6075029f746e3f38a5f0e948"],
-            "password": "password",
+            "password": "$2b$10$b3R9Mb1b2iPYfy7MHmRyBenApTLKRBhB6gz9XQMTXmKJidHJtlHkO",
             "upvotes": ["6075029f746e3f38a5f0e94b"],
             "downvotes": ["6075029f746e3f38a5f0e94a"]
         }
