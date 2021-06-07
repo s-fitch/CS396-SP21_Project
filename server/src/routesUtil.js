@@ -1,6 +1,7 @@
 require("dotenv").config()
 const jwt = require('jsonwebtoken');
 
+const Account = require('./schema/Account');
 const Community = require('./schema/Community');
 const Question = require('./schema/Question');
 const Answer = require('./schema/Answer');
@@ -322,7 +323,7 @@ const Utils = function () {
      * @returns 
      */
     this.existsAnswer = (req, res, next) => {
-        if (!req.params.quesId) {
+        if (!req.params.answId) {
             res.status(400).send(this.errorBody('ID of relevant answer must be included in the request path'));
             return;
         }
@@ -341,6 +342,10 @@ const Utils = function () {
 
                 req.answer = data;
                 next();
+            })
+            .catch(err => {
+                res.status(404).send(this.errorBody('Question with specified ID does not exist'));
+                return;
             })
     }
 
@@ -378,49 +383,64 @@ const Utils = function () {
      * @param {string} verb Either 'POST' or 'DELETE'
      */
     this.handleVote = (req, res) => {
-        const splitPath = req.route.path.split('/')
-        const voteType = splitPath[splitPath.length-1]
-        const verb = Object.keys(req.route.path.methods)[0]
+        const splitPath = req.url.split('/');
+        const voteType = splitPath[splitPath.length-1];
+        const verb = req.method;
         
         console.log(`${verb} /c/${req.params.commId}/q/${req.params.quesId}/a/${req.params.answId}/${voteType}`);
 
         let alreadyDone;
         let voteList;
-        let scoreChange;
+        let scoreChange = {};
 
         if ((voteType === 'upvote' && verb === 'POST') ||
             (voteType === 'downvote' && verb === 'DELETE')) {
-                alreadyDone = (a, b) => (a in b);
+                alreadyDone = (a, b) => b.includes(a);
                 voteList = 'upvotes';
                 scoreChange = {$inc: {score:1}};
         } else {
-            alreadyDone = (a, b) => !(a in b);
+            alreadyDone = (a, b) => !b.includes(a);
             voteList = 'downvotes';
-            scoreChange = {$dec: {score:1}};
+            scoreChange = {$inc: {score:-1}};
         }
 
         Account.findById(req.user._id)
             .then(data => {
-                if (alreadyDone(answer._id, data.voteList)) {
+
+                if (alreadyDone(req.answer._id, data[voteList])) {
                     res.status(204).send();
                     return;
                 }
 
-
-                data.voteList.push(req.params.quesId);
-                Account.findByIdAndUpdate(req.user._id, {voteList: data.voteList})
+                if (verb === 'POST') {
+                    data[voteList].push(req.answer._id);
+                } else {
+                    const idx = data[voteList].indexOf(req.answer._id)
+                    if (idx > -1) data[voteList].splice(idx, 1);
+                }
+                Account.findByIdAndUpdate(req.user._id, {[voteList]: data[voteList]})
                     .then(data => {
+
                         Answer.findByIdAndUpdate(req.answer._id, scoreChange)
-                        .then(data => {
-                            res.status(204).send();
-                            return;
-                        })
-                        .catch(err => {
-                            console.log(err);
-                            res.status(500).send(error500);
-                            return;
-                        })
+                            .then(data => {
+                                res.status(204).send();
+                                return;
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                res.status(500).send(error500);
+                                return;
+                            })
                     })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).send(this.error500);
+                        return;
+                    })
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send(this.error500);
             })
 
     }

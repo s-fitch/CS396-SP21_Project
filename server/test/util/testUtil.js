@@ -36,7 +36,9 @@ const Utils = function () {
         title: "Testing Question",
         content: "Is this server endpoint working properly?"
     };
-    this.mockAnswer = {};
+    this.mockAnswer = {
+        content: "My answer is correct."
+    };
     this.mockReport = {
         category: 1,
         detail: "This made me upset"
