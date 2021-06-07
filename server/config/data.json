@@ -3,7 +3,7 @@
         {
             "_id": "6075029f746e3f38a5f0e946",
             "email": "admin@test.com",
-            "password": "admin",
+            "password": "admin678",
             "communities": [],
             "upvotes": [],
             "downvotes": []
