@@ -5,6 +5,14 @@ import './Login.css';
 const baseURL = 'http://localhost:3000';
 
 class Login extends React.Component {
+    constructor (props) {
+        super(props);
+
+        this.state = {
+            signUp: false
+        }
+    }
+
     render () {
         return (
             <div style={{height: "100vh"}}>
@@ -15,7 +23,8 @@ class Login extends React.Component {
                     </div>
                 </nav>
                 <div style={{height: "90vh"}}>
-                    <LoginForm />
+                    <LoginForm 
+                        finish={this.props.finish}/>
                 </div>
             </div>
         )
@@ -68,7 +77,7 @@ class LoginForm extends React.Component {
                     <div id="passwordFeedback"></div>
                 </div>
                 <div id="generalFeedback" className="alert alert-danger" style={{display: "none", padding: "10px"}}></div>
-                <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Log in</button>
+                <button type="button" className="btn btn-primary" onClick={this.handleLogin}>Log in</button>
             </form>
         )
     }
@@ -187,7 +196,8 @@ class LoginForm extends React.Component {
                 return;
             }
 
-            this.props.finished(data);
+            this.successLogin();
+            this.props.finish(data);
 
         })
         .catch(err => console.log(err));
