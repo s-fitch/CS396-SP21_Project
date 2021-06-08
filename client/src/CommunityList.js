@@ -2,6 +2,8 @@ import React from 'react';
 
 import CommunitySearch from './CommunitySearch';
 
+const BASE_URL = 'https://cs396-sp21-project.herokuapp.com';
+
 class CommunityList extends React.Component {
     constructor(props) {
         super(props);
@@ -161,7 +163,7 @@ class CommunityForm extends React.Component {
             description: this.state.communityContent
         }
 
-        fetch(`/c/`, {
+        fetch(`${BASE_URL}/c/`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${this.props.tokens.access_token}`,

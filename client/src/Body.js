@@ -3,7 +3,8 @@ import './App.css';
 
 import CommunityList from './CommunityList';
 import CommunityView from './CommunityView';
-import CommunitySearch from './CommunitySearch';
+
+const BASE_URL = 'https://cs396-sp21-project.herokuapp.com';
 
 class Body extends React.Component {
     constructor(props) {
@@ -44,7 +45,7 @@ class Body extends React.Component {
     }
 
     updateCommunities() {
-        fetch('/account/feed', {
+        fetch(`${BASE_URL}/account/feed`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${this.props.tokens.access_token}`

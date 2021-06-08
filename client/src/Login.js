@@ -2,7 +2,7 @@ import React from 'react';
 import HeaderLogo from './HeaderLogo';
 import './Login.css';
 
-const baseURL = 'http://localhost:3000';
+const BASE_URL = 'https://cs396-sp21-project.herokuapp.com';
 
 class Login extends React.Component {
     render () {
@@ -227,7 +227,7 @@ class LoginForm extends React.Component {
         }
 
         // Make Login attempt
-        fetch(`${path}`, {
+        fetch(`${BASE_URL}${path}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

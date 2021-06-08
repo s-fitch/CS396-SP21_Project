@@ -2,6 +2,8 @@ import React from 'react';
 import CommunityFeed from './CommunityFeed';
 import QuestionView from './QuestionView';
 
+const BASE_URL = 'https://cs396-sp21-project.herokuapp.com';
+
 class CommunityView extends React.Component{
     constructor(props) {
         super(props);
@@ -72,7 +74,7 @@ class CommunityView extends React.Component{
 
     updateInfo() {
         // Get community info
-        fetch(`/c/${this.props.community}`, {
+        fetch(`${BASE_URL}/c/${this.props.community}`, {
             method: 'GET'
         })
         .then(response => response.json())
@@ -89,7 +91,7 @@ class CommunityView extends React.Component{
     }
     updateFeed() {
         // Get community feed
-        fetch(`/c/${this.props.community}/feed`, {
+        fetch(`${BASE_URL}/c/${this.props.community}/feed`, {
             method: 'GET'
         })
         .then(response => response.json())

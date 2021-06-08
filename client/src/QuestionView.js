@@ -1,5 +1,7 @@
 import React from 'react';
 
+const BASE_URL = 'https://cs396-sp21-project.herokuapp.com';
+
 class QuestionView extends React.Component {
     constructor(props) {
         super(props);
@@ -62,7 +64,7 @@ class QuestionView extends React.Component {
             header.Authorization = `Bearer ${this.props.tokens.access_token}`
         }
 
-        fetch(`/c/${this.props.community}/q/${this.props.question}`, {
+        fetch(`${BASE_URL}/c/${this.props.community}/q/${this.props.question}`, {
             method: "GET",
             headers: header
         })
@@ -116,7 +118,7 @@ class QuestionView extends React.Component {
         }
         
     
-        fetch(`/c/${this.props.community}/q/${this.props.question}/a`, {
+        fetch(`${BASE_URL}/c/${this.props.community}/q/${this.props.question}/a`, {
             method: "POST",
             headers: {
                 'Authorization': `Bearer ${this.props.tokens.access_token}`,

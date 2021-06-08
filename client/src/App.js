@@ -5,6 +5,8 @@ import Header from './Header';
 import Body from './Body';
 import Login from './Login';
 
+const BASE_URL = 'https://cs396-sp21-project.herokuapp.com';
+
 class App extends React.Component {
     constructor(props) {
         super(props);
