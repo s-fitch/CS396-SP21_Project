@@ -7,7 +7,6 @@ class CommunityList extends React.Component {
         super(props);
 
         this.state = {
-            communities: [],
             showAddCommunity: false
         }
         this.showAddCommunity = this.showAddCommunity.bind(this);
@@ -16,7 +15,7 @@ class CommunityList extends React.Component {
 
     render () {
 
-        const communityList = this.state.communities.map(comm => (
+        const communityList = this.props.communities.map(comm => (
             <a 
                 href="#" 
                 className="list-group-item list-group-item-action" 
@@ -38,7 +37,7 @@ class CommunityList extends React.Component {
                 <CommunityForm 
                     show={this.state.showAddCommunity}
                     close={this.hideAddCommunity}
-                    finished={this.updateFeed}
+                    finished={this.props.updateCommunities}
                     tokens={this.props.tokens}/>
                 <CommunitySearch 
                     selectCommunity={this.props.selectCommunity}/>
@@ -49,35 +48,17 @@ class CommunityList extends React.Component {
 
     componentDidMount () {
         if (this.props.tokens) {
-            this.updateFeed();
+            this.props.updateCommunities();
         }
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.tokens && prevProps.tokens !== this.props.tokens) {
-            this.updateFeed()
+            this.props.updateCommunities()
         }
     }
 
-    updateFeed() {
-        fetch('/account/feed', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${this.props.tokens.access_token}`
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message) {
-                console.log(data.message);
-                return;
-            } else {
-                this.setState({
-                    communities: data
-                })
-            }
-        })
-    }
+    
 
     genCommunityButton() {
         if(this.state.showAddCommunity) {
@@ -106,9 +87,6 @@ class CommunityList extends React.Component {
     }
 
     
-    genSearchButton(){
-
-    }
 }
 
 class CommunityForm extends React.Component {
