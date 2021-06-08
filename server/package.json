@@ -7,8 +7,8 @@
     "test": "cross-env NODE_ENV=development mocha --exit",
     "dev-start": "cross-env NODE_ENV=development nodemon index.js",
     "dev-populate": "cross-env NODE_ENV=development node ./config/scripts/execPopulateDB.js",
-    "prod-populate": "cross-env NODE_ENV=production node ./config/scripts/execPopulateDB.js",
-    "prod-start": "cross-env NODE_ENV=production nodemon index.js"
+    "populate": "cross-env NODE_ENV=production node ./config/scripts/execPopulateDB.js",
+    "start": "cross-env NODE_ENV=production nodemon index.js"
   },
   "repository": {
     "type": "git",
