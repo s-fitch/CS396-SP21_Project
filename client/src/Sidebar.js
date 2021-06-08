@@ -13,6 +13,7 @@ class Sidebar extends React.Component {
         }
         this.showAddCommunity = this.showAddCommunity.bind(this);
         this.hideAddCommunity = this.hideAddCommunity.bind(this);
+        this.finishedAddCommunity = this.finishedAddCommunity.bind(this);
     }
 
     render () {
@@ -24,7 +25,7 @@ class Sidebar extends React.Component {
                 <CommunityForm 
                     show={this.state.showAddCommunity}
                     close={this.hideAddCommunity}
-                    finished={this.props.updateCommunities}
+                    finished={this.finishedAddCommunity}
                     tokens={this.props.tokens}/>
                 <CommunitySearch 
                     selectCommunity={this.props.selectCommunity}/>
@@ -100,6 +101,10 @@ class Sidebar extends React.Component {
         this.setState({
             showAddCommunity: false
         })
+    }
+    finishedAddCommunity() {
+        this.hideAddCommunity()
+        this.props.updateCommunities();
     }
 
     
@@ -191,7 +196,8 @@ class CommunityForm extends React.Component {
                 console.log(data);
                 return;
             }
-
+            document.querySelector('#communityTitle').value = '';
+            document.querySelector('#communityContent').value = '';
             this.setState({
                 communityTitle: '',
                 communityContent: ''
