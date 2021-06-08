@@ -45,6 +45,13 @@ class Body extends React.Component {
     }
 
     updateCommunities() {
+        if (!this.props.tokens) {
+            this.setState({
+                communities: []
+            })
+            return;
+        }
+ 
         fetch(`${BASE_URL}/account/feed`, {
             method: 'GET',
             headers: {
