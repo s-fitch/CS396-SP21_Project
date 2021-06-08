@@ -9,7 +9,12 @@ class Header extends React.Component {
     return (
         <nav className="navbar navbar-light bg-light" style={{height: "10vh"}}>
             <div className="container-fluid">
-                <HeaderLogo />
+                <a 
+                    href="#" 
+                    style={{textDecoration: 'none'}}
+                    onClick={this.props.showHome}>
+                        <HeaderLogo />
+                </a>
                 <Account 
                     tokens={this.props.tokens}
                     logout={this.props.logout}

@@ -26,7 +26,8 @@ class App extends React.Component {
         this.state = {
             currView: 0,
             prevView: 0,
-            tokens: tokens
+            tokens: tokens,
+            community: null
         }
 
         this.showLogin = this.showLogin.bind(this);
@@ -41,6 +42,9 @@ class App extends React.Component {
         this.getTokensFromCookie = this.getTokensFromCookie.bind(this);
         this.setTokensInCookie = this.setTokensInCookie.bind(this);
         this.clearTokensFromCookie = this.clearTokensFromCookie.bind(this);
+        
+        this.selectCommunity = this.selectCommunity.bind(this);
+        this.showLandingPage = this.showLandingPage.bind(this);
     }
 
     render () {
@@ -51,9 +55,12 @@ class App extends React.Component {
                     <Header 
                         tokens = {this.state.tokens}
                         logout = {this.logout}
-                        showLogin = {this.showLogin}/>
+                        showLogin = {this.showLogin}
+                        showHome = {this.showLandingPage}/>
                     <Body 
-                        tokens = {this.state.tokens}/>
+                        tokens = {this.state.tokens}
+                        community = {this.state.community}
+                        selectCommunity = {this.selectCommunity}/>
                 </div>
                 );
             case 1:
@@ -131,6 +138,16 @@ class App extends React.Component {
         })
     }
     
+    selectCommunity (ev) {
+        this.setState({
+            community: ev.target.id
+        });
+    }
+    showLandingPage () {
+        this.setState({
+            community: null
+        })
+    }
 }
 
 export default App;
