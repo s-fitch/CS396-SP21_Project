@@ -4,7 +4,7 @@ import CommunitySearch from './CommunitySearch';
 
 const BASE_URL = 'https://cs396-sp21-project.herokuapp.com';
 
-class CommunityList extends React.Component {
+class Sidebar extends React.Component {
     constructor(props) {
         super(props);
 
@@ -16,25 +16,10 @@ class CommunityList extends React.Component {
     }
 
     render () {
-
-        const communityList = this.props.communities.map(comm => (
-            <a 
-                href="#" 
-                className="list-group-item list-group-item-action" 
-                key={comm._id}
-                id={comm._id}
-                onClick={this.props.selectCommunity}>
-                    {comm.name}
-            </a>
-        ))
-
         return (
             <div style={{height: '100%', overflowY: "auto", padding: "5px"}}>
-                <h5 className="mt-3">Your Communities</h5>
-                <ul className="list-group" >
-                    {communityList}
-                </ul>
-                <h5 className="mt-5">Explore</h5>
+                {this.genCommunityList()}
+                <h5 className="mt-3">Explore</h5>
                 {this.genCommunityButton()}
                 <CommunityForm 
                     show={this.state.showAddCommunity}
@@ -61,10 +46,39 @@ class CommunityList extends React.Component {
     }
 
     
+    genCommunityList() {
+        if(!this.props.tokens) {
+            return null;
+        }
+
+        const items = this.props.communities.map(comm => (
+            <a 
+                href="#" 
+                className="list-group-item list-group-item-action" 
+                key={comm._id}
+                id={comm._id}
+                onClick={this.props.selectCommunity}>
+                    {comm.name}
+            </a>
+            ))
+
+        return (
+            <div className="mb-5">
+                <h5 className="mt-3">Your Communities</h5>
+                <ul className="list-group" >
+                    {items}
+                </ul>
+            </div>
+        )
+    }
 
     genCommunityButton() {
+        if (!this.props.tokens) {
+            return null;
+        }
+
         if(this.state.showAddCommunity) {
-            return;
+            return null;
         }
 
         return (
@@ -189,4 +203,4 @@ class CommunityForm extends React.Component {
 
 
 
-export default CommunityList;
+export default Sidebar;
