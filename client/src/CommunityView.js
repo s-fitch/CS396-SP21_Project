@@ -109,7 +109,6 @@ class CommunityView extends React.Component{
     }
 
     selectQuestion (ev) {
-        console.log(`Selected ${ev.target.closest('a').id}`)
         this.setState({
             question: ev.target.closest('a').id
         })
