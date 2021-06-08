@@ -36,7 +36,8 @@ class Body extends React.Component {
                         <CommunityView 
                             tokens={this.props.tokens}
                             community={this.state.community}
-                            communities={this.state.communities}/>
+                            communities={this.state.communities}
+                            updateCommunities={this.updateCommunities}/>
                     </div>
                 </div>
             )

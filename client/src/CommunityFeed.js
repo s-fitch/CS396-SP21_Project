@@ -16,7 +16,7 @@ class CommunityFeed extends React.Component {
     render() {
 
         return (
-        <div className="col" style={{height: "100%", overflowY: "auto"}}>
+        <div className="col" style={{height: "100%", overflowY: "auto", paddingTop: "5px"}}>
             {this.genCommunityHeader()}
             <div className="container-fluid d-flex justify-content-between align-items-center">
                 <h5>Questions</h5>
@@ -41,8 +41,15 @@ class CommunityFeed extends React.Component {
         } else {
             return (
                 <div className='container-fluid'>
-                    <div>
-                        <span className="h3"><b>{this.props.communityInfo.name}</b></span>
+                    <div className='d-flex align-items-center'>
+                        <h3 className="h3">
+                            <b>{this.props.communityInfo.name}</b>
+                        </h3>
+                        <Join 
+                            joined={this.props.joined} 
+                            finished={this.props.updateCommunities}
+                            tokens={this.props.tokens}
+                            community={this.props.communityInfo._id}/>
                     </div>
                     <p><small>{this.props.communityInfo.description}</small></p>
                 </div>
@@ -101,8 +108,74 @@ class CommunityFeed extends React.Component {
 
         this.props.updateFeed();
     }
-
     
+}
+
+
+class Join extends React.Component {
+    constructor (props) {
+        super(props);
+
+        this.joinCommunity = this.joinCommunity.bind(this);
+        this.leaveCommunity = this.leaveCommunity.bind(this);
+        this.handleJoinLeave = this.handleJoinLeave.bind(this);
+    }
+
+    render () {
+        if (!this.props.tokens) {
+            return null;
+        }
+
+        let classes="";
+        let text="";
+        let submit=null;
+
+        if (this.props.joined) {
+            classes="btn btn-outline-secondary";
+            text="Leave";
+            submit=this.leaveCommunity;
+        } else {
+            classes="btn btn-outline-primary";
+            text="Join";
+            submit=this.joinCommunity;
+        }
+
+        return (
+            <button 
+                type="button"
+                className={classes}
+                style={{borderRadius: "30px", padding: "0px", width: "70px", marginLeft: '30px'}}
+                onClick={submit}
+                >
+                    {text}
+                </button>
+        )
+    }
+
+
+    handleJoinLeave(method) {
+        fetch(`/c/${this.props.community}/join`, {
+            method: method,
+            headers: {Authorization: `Bearer ${this.props.tokens.access_token}`}
+        })
+        .then(response => {
+            if (response.status !== 204) {
+                console.log(response);
+                return;
+            }
+
+            this.props.finished();
+
+        })
+    }
+    
+    joinCommunity() {
+        this.handleJoinLeave('POST');
+    }
+    leaveCommunity() {
+        this.handleJoinLeave('DELETE');
+    }
+
 }
 
 class QuestionForm extends React.Component {
@@ -119,7 +192,7 @@ class QuestionForm extends React.Component {
 
     render() {
         if (!this.props.show) {
-            return null
+            return null;
         }
 
         return (

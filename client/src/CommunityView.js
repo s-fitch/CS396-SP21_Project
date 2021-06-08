@@ -30,7 +30,9 @@ class CommunityView extends React.Component{
                     feed={this.state.feed}
                     selectQuestion={this.selectQuestion}
                     tokens={this.props.tokens}
+                    joined={this.props.communities.map(c=>c._id).includes(this.props.community)}
                     updateFeed={this.updateFeed}
+                    updateCommunities={this.props.updateCommunities}
                     />
             )
         }
