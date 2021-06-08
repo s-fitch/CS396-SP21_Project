@@ -24,9 +24,7 @@ class App extends React.Component {
         this.state = {
             currView: 0,
             prevView: 0,
-            tokens: tokens,
-            community: null,
-            question: null
+            tokens: tokens
         }
 
         this.showLogin = this.showLogin.bind(this);
@@ -41,8 +39,6 @@ class App extends React.Component {
         this.getTokensFromCookie = this.getTokensFromCookie.bind(this);
         this.setTokensInCookie = this.setTokensInCookie.bind(this);
         this.clearTokensFromCookie = this.clearTokensFromCookie.bind(this);
-
-        this.selectCommunity = this.selectCommunity.bind(this);
     }
 
     render () {
@@ -55,9 +51,7 @@ class App extends React.Component {
                         logout = {this.logout}
                         showLogin = {this.showLogin}/>
                     <Body 
-                        tokens = {this.state.tokens}
-                        community = {this.state.community}
-                        selectCommunity={this.selectCommunity}/>
+                        tokens = {this.state.tokens}/>
                 </div>
                 );
             case 1:
@@ -122,21 +116,17 @@ class App extends React.Component {
         this.setState({
             currView: 0,
             prevView: 0,
-            tokens: tokens
+            tokens: tokens,
+            community: null
         })
     }
     logout () {
         this.clearTokensFromCookie();
         this.setState({
             loggedIn: false,
-            tokens: null
+            tokens: null,
+            community: null
         })
-    }
-
-    selectCommunity (ev) {
-        this.setState({
-            community: ev.target.id
-        });
     }
     
 }
