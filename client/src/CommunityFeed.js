@@ -41,7 +41,9 @@ class CommunityFeed extends React.Component {
         } else {
             return (
                 <div className='container-fluid'>
-                    <h3><b>{this.props.communityInfo.name}</b></h3>
+                    <div>
+                        <span className="h3"><b>{this.props.communityInfo.name}</b></span>
+                    </div>
                     <p><small>{this.props.communityInfo.description}</small></p>
                 </div>
             );
@@ -136,7 +138,7 @@ class QuestionForm extends React.Component {
                 <textarea 
                     className="form-control" 
                     rows="3" 
-                    placeholder="Your full question..."
+                    placeholder="Full question..."
                     id="questionContent"
                     onChange={this.handleChange}></textarea>
             </div>
