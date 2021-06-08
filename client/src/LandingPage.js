@@ -12,7 +12,7 @@ class LandingPage extends React.Component {
                 <ul className="list-group">
                     <li className="list-group-item ">
                         <b>How does Community Q's work?</b>
-                        <p>Community Q's is composed of many different communities, each with their own topic of interest, inside of which you can ask questions and find answers. </p>
+                        <p>Community Q's is composed of many different communities, each with their own topic of interest, inside of which you can ask questions and find answers. A community's feed page shows the list of questions asked, which can then be clicked on to see the answers.</p>
                     </li>
                     <li className="list-group-item">
                         <b>How do I find communities?</b>
