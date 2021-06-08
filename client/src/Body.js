@@ -20,12 +20,10 @@ class Body extends React.Component {
     }
 
     render () {
-        let content;
-        if (this.props.tokens) {
-            // Logged in
-            content = (
+            return (
+            <div className="container-fluid" style={{height: "90vh"}}>
                 <div className="row" style={{flexWrap:"nowrap", height: "100%"}}>
-                    <div className="col bg-light" style={{minHeight: "100%", maxHeight: "100%", minWidth: "200px", padding: "0px", maxWidth:"200px"}}>
+                    <div className="col bg-light" style={{minHeight: "100%", maxHeight: "100%", minWidth: "250px", padding: "0px", maxWidth:"250px"}}>
                         <CommunityList 
                             tokens={this.props.tokens}
                             selectCommunity={this.selectCommunity}
@@ -40,21 +38,9 @@ class Body extends React.Component {
                             updateCommunities={this.updateCommunities}/>
                     </div>
                 </div>
-            )
-        } else {
-            // Not logged in
-            content = (
-                <div className="row" style={{flexWrap:"nowrap", height: "100%"}}>
-                    <CommunitySearch />
-                </div>
-            )
-        }
-
-        return (
-            <div className="container-fluid" style={{height: "90vh"}}>
-                {content}
             </div>
-        )
+            )
+        
     }
 
     updateCommunities() {
