@@ -5,14 +5,6 @@ import './Login.css';
 const baseURL = 'http://localhost:3000';
 
 class Login extends React.Component {
-    constructor (props) {
-        super(props);
-
-        this.state = {
-            signUp: false
-        }
-    }
-
     render () {
         return (
             <div style={{height: "100vh"}}>
@@ -29,33 +21,47 @@ class Login extends React.Component {
             </div>
         )
     }
+
 }
 
 class LoginForm extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            'email': "",
-            'password': "",
-            'handleSubmit': this.handleLogin
-        }
-
+        this.showLogIn = this.showLogIn.bind(this);
+        this.showSignUp = this.showSignUp.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
-        //this.handleSignup = this.handleSignup.bind(this);
+        this.handleSignUp = this.handleSignUp.bind(this);
+        this.makePost = this.makePost.bind(this);
+        this.resetForm = this.resetForm.bind(this);
+
+        this.state = {
+            email: '',
+            password: '',
+
+            currText: 'Log in',
+            switchPrompt: 'Need an account?',
+            switchText: 'Sign Up',
+            handleSubmit: this.handleLogin,
+            handleSwitch: this.showSignUp
+        }
+
+        
     }
 
     render() {
         return (
             <form >
-                <h2 className="h2"><b>Log in</b></h2>
+                <h2 className="h2"><b>{this.state.currText}</b></h2>
                 <div className="mb-3">
                     <div className="contianer-fluid d-flex justify-content-between">
                         <label htmlFor="exampleInputEmail1" className="form-label align-self-center" >Email address</label>
                         <span className="align-self-center">
-                            Need an account?
-                            <a href="#">Sign Up</a>
+                            {this.state.switchPrompt}
+                            <a href="#" onClick={this.state.handleSwitch}>
+                                {this.state.switchText}
+                            </a>
                         </span>
                     </div>
                     <input type="email" 
@@ -77,7 +83,7 @@ class LoginForm extends React.Component {
                     <div id="passwordFeedback"></div>
                 </div>
                 <div id="generalFeedback" className="alert alert-danger" style={{display: "none", padding: "10px"}}></div>
-                <button type="button" className="btn btn-primary" onClick={this.handleLogin}>Log in</button>
+                <button type="button" className="btn btn-primary" onClick={this.state.handleSubmit}>{this.state.currText}</button>
             </form>
         )
     }
@@ -86,7 +92,41 @@ class LoginForm extends React.Component {
         this.setState({
             [ev.target.type]: ev.target.value
         })
-        console.log(ev.target.value);
+    }
+
+
+    resetForm() {
+        this.validEmail();
+        this.validPassword();
+        this.feedbackSuccess();
+        document.querySelector('#email').value="";
+        document.querySelector('#password').value="";
+    }
+    showLogIn () {
+        this.resetForm();
+        this.setState({
+            email: '',
+            password: '',
+
+            currText: 'Log in',
+            switchPrompt: 'Need an account?',
+            switchText: 'Sign Up',
+            handleSubmit: this.handleLogin,
+            handleSwitch: this.showSignUp
+        })
+    }
+    showSignUp () {
+        this.resetForm();
+        this.setState({
+            email: '',
+            password: '',
+
+            currText: 'Sign Up',
+            switchPrompt: 'Already have an account?',
+            switchText: 'Log in',
+            handleSubmit: this.handleSignUp,
+            handleSwitch: this.showLogIn
+        })
     }
 
     invalidEmail(message) {
@@ -153,21 +193,28 @@ class LoginForm extends React.Component {
         return true;
     }
 
-    failedLogin(message) {
+    feedbackFail(message) {
         document.querySelector('#password').value = "";
         const feedback = document.querySelector('#generalFeedback');
         feedback.style.display = "block";
         feedback.innerHTML = message;
         return;
     }
-    successLogin() {
+    feedbackSuccess() {
         const feedback = document.querySelector('#generalFeedback');
         feedback.style.display= "none";
         feedback.innerHTML = "";
         return;
     }
 
-    handleLogin (ev) {
+    handleLogin () {
+        this.makePost('/account/login');
+    }
+    handleSignUp () {
+        this.makePost('/account');
+    }
+
+    makePost(path) {
         const validEmail = this.validateEmail();
         const validPassword = this.validatePassword();
         if (!(validEmail && validPassword)) {
@@ -180,7 +227,7 @@ class LoginForm extends React.Component {
         }
 
         // Make Login attempt
-        fetch(`/account/login`, {
+        fetch(`${path}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -192,11 +239,11 @@ class LoginForm extends React.Component {
             if (data.message) {
                 // Failed authentication
                 console.log(data);
-                this.failedLogin(data.message);
+                this.feedbackFail(data.message);
                 return;
             }
 
-            this.successLogin();
+            this.feedbackSuccess();
             this.props.finish(data);
 
         })
