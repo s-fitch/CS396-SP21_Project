@@ -1,5 +1,5 @@
 import React from 'react';
-import HeaderLogo from './HeaderLogo';
+import Logo from './logo';
 import '../styles/Login.css';
 
 class Login extends React.Component {
@@ -8,7 +8,7 @@ class Login extends React.Component {
             <div style={{height: "100vh"}}>
                 <nav className="navbar navbar-light bg-white" style={{height: "10vh"}}>
                     <div className="container-fluid">
-                        <HeaderLogo />
+                        <Logo />
                         <button type="button" className="btn-close" aria-label="Close" onClick={this.props.hide}></button>
                     </div>
                 </nav>
