@@ -10,34 +10,34 @@ class CommunityJoin extends React.Component {
   }
 
   render () {
-    if (!this.props.tokens) {
-      return null;
+    const style = {
+      borderRadius: "30px", 
+      padding: "0px", 
+      width: "70px", 
+      marginLeft: '30px',
     }
 
-    let classes="";
-    let text="";
-    let submit=null;
-
-    if (this.props.joined) {
-      classes="btn btn-outline-secondary";
-      text="Leave";
-      submit=this.leaveCommunity;
-    } else {
-      classes="btn btn-outline-primary";
-      text="Join";
-      submit=this.joinCommunity;
-    }
-
-    return (
-      <button 
-        type="button"
-        className={classes}
-        style={{borderRadius: "30px", padding: "0px", width: "70px", marginLeft: '30px'}}
-        onClick={submit}
-      >
-        {text}
-      </button>
-    )
+    return (this.props.tokens && (
+      (this.props.joined) ? (
+        <button 
+          type="button"
+          className="btn btn-outline-secondary"
+          style={style}
+          onClick={this.leaveCommunity}
+        >
+          Leave
+        </button>
+      ) : (
+        <button 
+          type="button"
+          className="btn btn-outline-primary"
+          style={style}
+          onClick={this.joinCommunity}
+        >
+          Join
+        </button>
+      )
+    ));
   }
 
   handleJoinLeave(method) {
@@ -52,9 +52,7 @@ class CommunityJoin extends React.Component {
             console.log(response);
             return;
           }
-
           this.props.finished();
-
         });
   }
     
