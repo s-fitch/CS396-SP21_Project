@@ -1,9 +1,9 @@
 import React from 'react';
-import Sidebar from '../sidebar/Sidebar';
-import CommunityView from './CommunityView';
-import LandingPage from './LandingPage';
+import Sidebar from './sidebar/Sidebar';
+import CommunityView from './body/CommunityView';
+import LandingPage from './body/LandingPage';
 
-class Body extends React.Component {
+class Main extends React.Component {
   constructor(props) {
     super(props);
 
@@ -79,4 +79,4 @@ class Body extends React.Component {
 
 }
 
-export default Body;
+export default Main;
