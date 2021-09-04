@@ -1,6 +1,6 @@
 import React from 'react';
 
-class LandingPage extends React.Component {
+class Landing extends React.Component {
     render() {
         return (
             <div style={{height: "100%", padding: "10px", overflowY: "auto"}}>
@@ -36,4 +36,4 @@ class LandingPage extends React.Component {
         );
     }
 }
-export default LandingPage
+export default Landing;
