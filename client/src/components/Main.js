@@ -1,7 +1,6 @@
 import React from 'react';
 import Sidebar from './sidebar/Sidebar';
-import CommunityView from './body/CommunityView';
-import LandingPage from './body/LandingPage';
+import Body from './body/Body';
 
 class Main extends React.Component {
   constructor(props) {
@@ -28,16 +27,12 @@ class Main extends React.Component {
             />
           </div>
           <div className="col" style={{minHeight: "100%", maxHeight: "100%", overflow: 'hidden'}}>
-            {(this.props.community) ? (
-              <CommunityView 
-                tokens={this.props.tokens}
-                community={this.props.community}
-                communities={this.state.communities}
-                updateCommunities={this.updateCommunities}
-              />
-            ) : (
-              <LandingPage />
-            )}
+            <Body 
+              tokens={this.props.tokens}
+              community={this.props.community}
+              communities={this.state.communities}
+              updateCommunities={this.updateCommunities}
+            />
           </div>
         </div>
       </div>

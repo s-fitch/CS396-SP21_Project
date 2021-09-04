@@ -1,4 +1,5 @@
 import React from 'react';
+import Landing from './Landing';
 import CommunityFeed from './CommunityFeed';
 import QuestionView from './QuestionView';
 
@@ -20,7 +21,7 @@ class Body extends React.Component{
 
     render () {
         if (!this.props.community) {
-            return null;
+            return (<Landing />);
         } else if (!this.state.question) {
             return (
                 <CommunityFeed
