@@ -18,10 +18,35 @@ class CommunityFeed extends React.Component {
   render() {
     return (
       <div className="col" style={{height: "100%", overflowY: "auto", paddingTop: "5px"}}>
-        {this.genCommunityHeader()}
+        {this.props.communityInfo && (
+          <div className='container-fluid'>
+            <div className='d-flex align-items-center'>
+              <h3 className="h3">
+                <b>{this.props.communityInfo.name}</b>
+              </h3>
+              <CommunityJoin 
+                joined={this.props.joined} 
+                finished={this.props.updateCommunities}
+                tokens={this.props.tokens}
+                community={this.props.communityInfo._id}/>
+              </div>
+            <p><small>
+              {this.props.communityInfo.description}
+            </small></p>
+          </div>
+        )}
         <div className="container-fluid d-flex justify-content-between align-items-center">
           <h5>Questions</h5>
-            {this.genQuestionButton()}
+          {this.props.tokens && !this.state.showQuestionInput && (
+            <button 
+              type="button" 
+              className="btn btn-primary" 
+              style={{margin: "5px"}}
+              onClick={this.showQuestionInput}
+            >
+              Ask a Question
+            </button>
+          )}
         </div>
         {this.state.showQuestionInput && (
           <QuestionForm
@@ -32,71 +57,24 @@ class CommunityFeed extends React.Component {
           />
         )}
         <ul className="list-group mb-3">
-          {this.genFeedList()}
+          {this.props.feed.map(q => (
+            <a 
+              href="#"
+              className="list-group-item list-group-item-action"
+              onClick={this.props.selectQuestion}
+              key={q._id}
+              id={q._id}
+              style={{height: "100px"}}
+            >
+              <h6><b>{q.title}</b></h6>
+              <div className='text-truncate'>
+                {q.content}
+              </div>
+            </a>
+          ))}
         </ul>
       </div>
     )
-  }
-
-  genCommunityHeader() {
-    if (!this.props.communityInfo) {
-      return null;
-    } else {
-      return (
-        <div className='container-fluid'>
-          <div className='d-flex align-items-center'>
-            <h3 className="h3">
-              <b>{this.props.communityInfo.name}</b>
-            </h3>
-            <CommunityJoin 
-              joined={this.props.joined} 
-              finished={this.props.updateCommunities}
-              tokens={this.props.tokens}
-              community={this.props.communityInfo._id}/>
-            </div>
-          <p><small>
-            {this.props.communityInfo.description}
-          </small></p>
-        </div>
-      );
-    }
-  }
-
-  genFeedList() {
-    return (this.props.feed.map(q => (
-      <a 
-        href="#"
-        className="list-group-item list-group-item-action"
-        onClick={this.props.selectQuestion}
-        key={q._id}
-        id={q._id}
-        style={{height: "100px"}}
-      >
-        <h6><b>{q.title}</b></h6>
-        <div className='text-truncate'>
-          {q.content}
-        </div>
-      </a>
-    )));
-  }
-  
-  genQuestionButton() {
-    if (!this.props.tokens) {
-      return null
-    }
-    if (this.state.showQuestionInput) {
-      return null
-    }
-    return (
-      <button 
-        type="button" 
-        className="btn btn-primary" 
-        style={{margin: "5px"}}
-        onClick={this.showQuestionInput}
-      >
-        Ask a Question
-      </button>
-    );
   }
 
   showQuestionInput() {
