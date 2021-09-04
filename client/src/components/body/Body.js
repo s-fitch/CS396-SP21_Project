@@ -2,7 +2,7 @@ import React from 'react';
 import CommunityFeed from './CommunityFeed';
 import QuestionView from './QuestionView';
 
-class CommunityView extends React.Component{
+class Body extends React.Component{
     constructor(props) {
         super(props);
 
@@ -10,8 +10,8 @@ class CommunityView extends React.Component{
             communityInfo: null,
             feed: [],
             question: null,
-
         }
+
         this.selectQuestion = this.selectQuestion.bind(this);
         this.closeQuestion = this.closeQuestion.bind(this);
         this.updateFeed = this.updateFeed.bind(this);
@@ -21,9 +21,7 @@ class CommunityView extends React.Component{
     render () {
         if (!this.props.community) {
             return null;
-        } 
-
-        if (!this.state.question) {
+        } else if (!this.state.question) {
             return (
                 <CommunityFeed
                     communityInfo={this.state.communityInfo}
@@ -33,19 +31,18 @@ class CommunityView extends React.Component{
                     joined={this.props.communities.map(c=>c._id).includes(this.props.community)}
                     updateFeed={this.updateFeed}
                     updateCommunities={this.props.updateCommunities}
-                    />
-            )
+                />
+            );
+        } else {
+            return (
+                <QuestionView 
+                    community={this.props.community}
+                    question={this.state.question}
+                    tokens={this.props.tokens}
+                    close={this.closeQuestion}
+                />
+            );
         }
-
-        return (
-            <QuestionView 
-                community={this.props.community}
-                question={this.state.question}
-                tokens={this.props.tokens}
-                close={this.closeQuestion}/>
-        )
-        
-        
     }
 
     componentDidMount () {
@@ -118,4 +115,4 @@ class CommunityView extends React.Component{
     }
 }
 
-export default CommunityView;
+export default Body;
