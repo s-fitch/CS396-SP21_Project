@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Header from './components/sections/Header';
-import Body from './components/sections/Body';
+import Header from './components/header/Header';
+import Body from './components/body/Body';
 import Login from './components/Login';
 
 

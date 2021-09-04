@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CommunitySearch from '../CommunitySearch';
+import CommunitySearch from './CommunitySearch';
 
 class Sidebar extends React.Component {
     constructor(props) {
