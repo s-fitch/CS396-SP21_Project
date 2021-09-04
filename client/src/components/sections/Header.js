@@ -1,28 +1,42 @@
 import React from 'react';
+import Logo from '../Logo';
 
-import Account from '../Account';
-import Logo from '../logo';
+const Header = ({ showHome, tokens, logout, showLogin }) => {
+  return (
+    <nav className="navbar navbar-light bg-light" style={{height: "10vh"}}>
+      <div className="container-fluid">
+        <a 
+          href="#" 
+          style={{textDecoration: 'none'}}
+          onClick={showHome}
+        >
+          <Logo />
+        </a>
 
-class Header extends React.Component {
-  render () {
-    return (
-      <nav className="navbar navbar-light bg-light" style={{height: "10vh"}}>
-        <div className="container-fluid">
-          <a 
-            href="#" 
-            style={{textDecoration: 'none'}}
-            onClick={this.props.showHome}
-          >
-            <Logo />
-          </a>
-          <Account 
-            tokens={this.props.tokens}
-            logout={this.props.logout}
-            showLogin={this.props.showLogin}/>
+        {(tokens) ? (
+          <div className="d-flex">
+            <button 
+              className="btn btn-primary" 
+              type="button" 
+              onClick={logout}
+            >
+              Logout
+            </button>
           </div>
-      </nav>
-    )
-  }
+        ) : (
+          <div className="d-flex">
+            <button 
+              className="btn btn-primary" 
+              type="button" 
+              onClick={showLogin}
+            >
+              Log In
+            </button>
+          </div>
+        )}
+      </div>
+    </nav>
+  )
 }
 
 export default Header;
