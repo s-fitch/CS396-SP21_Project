@@ -1,9 +1,8 @@
 import React from 'react';
-import './App.css';
 
 import Sidebar from './Sidebar';
-import CommunityView from './CommunityView';
-import LandingPage from './LandingPage';
+import CommunityView from '../CommunityView';
+import LandingPage from '../LandingPage';
 
 class Body extends React.Component {
     constructor(props) {

@@ -1,9 +1,8 @@
 import React from 'react';
-import './App.css';
 
-import Header from './Header';
-import Body from './Body';
-import Login from './Login';
+import Header from './components/sections/Header';
+import Body from './components/sections/Body';
+import Login from './components/Login';
 
 
 class App extends React.Component {

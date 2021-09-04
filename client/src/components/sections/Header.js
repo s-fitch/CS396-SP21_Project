@@ -1,8 +1,7 @@
 import React from 'react';
-import './App.css';
 
-import Account from './Account';
-import HeaderLogo from './HeaderLogo';
+import Account from '../Account';
+import HeaderLogo from '../HeaderLogo';
 
 class Header extends React.Component {
   render () {

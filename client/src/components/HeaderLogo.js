@@ -1,5 +1,5 @@
 import React from 'react';
-import * as colors from './colors.json';
+import * as colors from '../styles/colors.json';
 
 class HeaderLogo extends React.Component{
     render () {

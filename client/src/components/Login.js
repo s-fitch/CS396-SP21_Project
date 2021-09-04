@@ -1,6 +1,6 @@
 import React from 'react';
 import HeaderLogo from './HeaderLogo';
-import './Login.css';
+import '../styles/Login.css';
 
 class Login extends React.Component {
     render () {
