@@ -8,7 +8,7 @@ class QuestionForm extends React.Component {
       questionTitle: '',
       questionContent: ''
     }
-    this.submitAnswer = this.submitAnswer.bind(this);
+    this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -49,7 +49,7 @@ class QuestionForm extends React.Component {
             type="button"
             className="btn btn-primary ml-2"
             style={{width: "100px", marginLeft: "5px"}}
-            onClick={this.submitAnswer}
+            onClick={this.submit}
           >
             Submit
           </button>
@@ -59,13 +59,12 @@ class QuestionForm extends React.Component {
   }
 
   handleChange(ev) {
-    console.log(ev.target.value);
     this.setState({
       [ev.target.id]: ev.target.value
     })
   }
   
-  submitAnswer() {
+  submit() {
     if (this.state.questionTitle === "" || this.state.questionContent === "") {
       return;
     }
