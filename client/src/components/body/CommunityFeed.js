@@ -23,13 +23,14 @@ class CommunityFeed extends React.Component {
           <h5>Questions</h5>
             {this.genQuestionButton()}
         </div>
-        <QuestionForm
-          show={this.state.showQuestionInput}
-          close={this.hideQuestionInput}
-          finished={this.finishedQuestionInput}
-          communityInfo={this.props.communityInfo}
-          tokens={this.props.tokens}
-        />
+        {this.state.showQuestionInput && (
+          <QuestionForm
+            close={this.hideQuestionInput}
+            finished={this.finishedQuestionInput}
+            communityInfo={this.props.communityInfo}
+            tokens={this.props.tokens}
+          />
+        )}
         <ul className="list-group mb-3">
           {this.genFeedList()}
         </ul>

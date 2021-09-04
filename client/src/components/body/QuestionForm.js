@@ -13,10 +13,6 @@ class QuestionForm extends React.Component {
   }
 
   render() {
-    if (!this.props.show) {
-      return null;
-    }
-
     return (
       <form className="container-fluid card">
         <div className="mb-3">
