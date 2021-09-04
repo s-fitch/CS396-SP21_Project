@@ -90,10 +90,7 @@ class CommunityFeed extends React.Component {
   }
   
   finishedQuestionInput() {
-    this.setState({
-      showQuestionInput: false
-    });
-
+    this.hideQuestionInput();
     this.props.updateFeed();
   }
     
