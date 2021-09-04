@@ -1,0 +1,20 @@
+{
+  "questions": [
+    {
+      "question": "How does Community Q's work?",
+      "answer": "Community Q's is composed of many different communities, each with their own topic of interest, inside of which you can ask questions and find answers. A community's feed page shows the list of questions asked, which can then be clicked on to see the answers."
+    },
+    {
+      "question": "How do I find communities?",
+      "answer": "To find a community, just use the search bar on the left side of the page. Enter terms for the topics you are interested in, and related communities will appear below."
+    },
+    {
+      "question": "Do I need an account?",
+      "answer": "No, you can freely browse all the communities, questions, and answers that Community Q's has to offer without an account.\nHowever, you will need an account to access the additional features of Community Q's, such as joining communities, posting your questions, or answering others' questions."
+    },
+    {
+      "question": "How can I get back to this page?",
+      "answer": "To get back to this homepage, you can click the Community Q's logo in the uppper lefthand corner of the page."
+    }
+  ]
+}
