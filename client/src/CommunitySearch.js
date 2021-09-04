@@ -1,7 +1,5 @@
 import React from 'react';
 
-const BASE_URL = 'https://cs396-sp21-project.herokuapp.com';
-
 class CommunitySearch extends React.Component {
     constructor(props) {
         super(props);
@@ -51,7 +49,7 @@ class CommunitySearch extends React.Component {
             return;
         }
 
-        fetch(`${BASE_URL}/c/search?terms=${ev.target.value}`)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/c/search?terms=${ev.target.value}`)
             .then(response => response.json())
             .then(data => {
                 this.setState({

@@ -1,7 +1,5 @@
 import React from 'react';
 
-const BASE_URL = 'https://cs396-sp21-project.herokuapp.com';
-
 class CommunityFeed extends React.Component {
     constructor(props) {
         super(props);
@@ -156,7 +154,7 @@ class Join extends React.Component {
 
 
     handleJoinLeave(method) {
-        fetch(`${BASE_URL}/c/${this.props.community}/join`, {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/c/${this.props.community}/join`, {
             method: method,
             headers: {Authorization: `Bearer ${this.props.tokens.access_token}`}
         })
@@ -257,7 +255,7 @@ class QuestionForm extends React.Component {
             'content': this.state.questionContent
         }
 
-        fetch(`${BASE_URL}/c/${this.props.communityInfo._id}/q`, {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/c/${this.props.communityInfo._id}/q`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${this.props.tokens.access_token}`,

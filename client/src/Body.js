@@ -5,8 +5,6 @@ import Sidebar from './Sidebar';
 import CommunityView from './CommunityView';
 import LandingPage from './LandingPage';
 
-const BASE_URL = 'https://cs396-sp21-project.herokuapp.com';
-
 class Body extends React.Component {
     constructor(props) {
         super(props);
@@ -61,7 +59,7 @@ class Body extends React.Component {
             return;
         }
  
-        fetch(`${BASE_URL}/account/feed`, {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/account/feed`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${this.props.tokens.access_token}`
