@@ -35,7 +35,7 @@ class QuestionView extends React.Component {
             <button type="button" className="btn-close" aria-label="Close" onClick={this.props.close}></button>
           </div>
         </nav>
-        
+
         <div className="container-fluid">
           <h6>{this.state.questionInfo.title}</h6>
           <p>{this.state.questionInfo.content}</p>
@@ -43,12 +43,23 @@ class QuestionView extends React.Component {
 
         <div className="container-fluid d-flex justify-content-between align-items-center" style={{marginTop: "30px"}}>
           <span className="h5">Answers</span>
-          {this.genAnswerButton()}
+          {this.props.tokens && !this.state.showAnswerInput && (
+            <button 
+              type="button" 
+              className="btn btn-primary " 
+              style={{margin: "5px"}}
+              onClick={this.openAnswer}
+            >
+              Answer
+            </button>
+          )}
         </div>
 
         {this.state.showAnswerInput && (
           <AnswerForm 
             tokens={this.props.tokens}
+            community={this.props.community}
+            question={this.props.question}
             close={this.closeAnswer}
             finished={this.closeAnswer}
           />
@@ -113,26 +124,6 @@ class QuestionView extends React.Component {
     this.closeAnswer();
     this.updateInfo();
   }
-  
-  genAnswerButton() {
-    if (!this.props.tokens){
-      return null
-    } else if (this.state.showAnswerInput) {
-      return null;
-    } else {
-      return (
-        <button 
-          type="button" 
-          className="btn btn-primary " 
-          style={{margin: "5px"}}
-          onClick={this.openAnswer}
-        >
-          Answer
-        </button>
-      )
-    }
-  }
-
 
 }
 
