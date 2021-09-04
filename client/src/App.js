@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Header from './components/header/Header';
-import Body from './components/body/Body';
+import Header from './components/Header';
+import Main from './components/Main';
 import Login from './components/Login';
 
 
@@ -55,7 +55,7 @@ class App extends React.Component {
                         logout = {this.logout}
                         showLogin = {this.showLogin}
                         showHome = {this.showLandingPage}/>
-                    <Body 
+                    <Main 
                         tokens = {this.state.tokens}
                         community = {this.state.community}
                         selectCommunity = {this.selectCommunity}/>
