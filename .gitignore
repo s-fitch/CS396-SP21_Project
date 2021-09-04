@@ -2,3 +2,6 @@ node_modules
 
 # Private .env file
 .env
+
+# VSCode config
+.vscode
