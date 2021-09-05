@@ -23,27 +23,23 @@ class CommunitySearch extends React.Component {
           required
         />
         <ul className="list-group mt-3" >
-          {this.genResults()}
+          {this.state.results.map(comm => (
+            <a 
+              href="#" 
+                className="list-group-item list-group-item-action" 
+                key={comm._id}
+                id={comm._id}
+                onClick={this.props.selectCommunity}>
+                {comm.name}
+              </a>
+          ))}
         </ul>
       </div>
     )
   }
 
-  genResults() {
-    return (this.state.results.map(comm => (
-      <a 
-        href="#" 
-        className="list-group-item list-group-item-action" 
-        key={comm._id}
-        id={comm._id}
-        onClick={this.props.selectCommunity}>
-        {comm.name}
-      </a>
-    )));
-  }
-
   handleChange(ev) {
-    if (ev.target.value === "") {
+    if (ev.target.value === "" && ev.target.value.length < 3) {
       this.setState({
         results: []
       });
@@ -57,7 +53,6 @@ class CommunitySearch extends React.Component {
           results: data
         })
       })
-
   }
 
 }
