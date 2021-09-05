@@ -9,7 +9,7 @@ class CommunityJoin extends React.Component {
     this.handleJoinLeave = this.handleJoinLeave.bind(this);
   }
 
-  render () {
+  render() {
     const style = {
       borderRadius: "30px", 
       padding: "0px", 

@@ -18,7 +18,7 @@ class Body extends React.Component{
     this.updateFeed = this.updateFeed.bind(this);
   }
 
-  render () {
+  render() {
     if (!this.props.community) {
       return (<Landing />);
     } else if (!this.state.question) {
@@ -45,14 +45,14 @@ class Body extends React.Component{
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.community) {
       this.updateInfo();
       this.updateFeed();
     }
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     if (prevProps.community !== this.props.community) {
       this.setState({
         question: null
@@ -107,7 +107,7 @@ class Body extends React.Component{
         .catch(err => console.log(err));
     }
 
-    selectQuestion (ev) {
+    selectQuestion(ev) {
       /**
        * Select question from community feed
        */
@@ -116,7 +116,7 @@ class Body extends React.Component{
       });
     }
 
-    closeQuestion (ev) {
+    closeQuestion(ev) {
       /**
        * Unselect question from community
        */

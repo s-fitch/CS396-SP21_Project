@@ -157,7 +157,7 @@ class Login extends React.Component {
 
   }
 
-  validateEmail (email) {
+  validateEmail(email) {
     /**
      * Validate current email address entry by user
      * 
@@ -238,11 +238,11 @@ class Login extends React.Component {
         .catch(err => console.log(err));
   }
 
-  logIn () {
+  logIn() {
     this.authPost('/account/login');
   }
   
-  signUp () {
+  signUp() {
     this.authPost('/account');
   }
 

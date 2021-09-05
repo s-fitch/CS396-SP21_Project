@@ -14,7 +14,7 @@ class Main extends React.Component {
     this.updateCommunities = this.updateCommunities.bind(this);
   }
 
-  render () {
+  render() {
     return (
       <div className="container-fluid" style={{height: "90vh"}}>
         <div className="row" style={{flexWrap:"nowrap", height: "100%"}}>

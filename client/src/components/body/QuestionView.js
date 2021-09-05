@@ -72,7 +72,7 @@ class QuestionView extends React.Component {
     )
   }
 
-  updateInfo () {
+  updateInfo() {
     let header = {}
     if (this.props.tokens) {
       header.Authorization = `Bearer ${this.props.tokens.access_token}`

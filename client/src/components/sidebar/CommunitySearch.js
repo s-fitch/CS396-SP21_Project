@@ -28,7 +28,7 @@ class CommunitySearch extends React.Component {
         )
     }
 
-    genResults () {
+    genResults() {
         return (this.state.results.map(comm => (
             <a 
                 href="#" 
