@@ -1,9 +1,9 @@
 form {
-    border: solid 2px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
     width: 400px;
     padding: 20px;
     margin: auto;
+    border: solid 2px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
 }
 
 form button {
