@@ -4,13 +4,12 @@ Community Q's is an anonymous, community based Q&A web application that enables 
 
 This application works similar to existing Q&A platforms like Piazza and Campuswire but differs in two key ways:
 
-1. Community Q's is not solely academic based, but instead seeks to provide an all encompasing Q&A platform for everyone.
+1. Community Q's is not solely academic based, but instead seeks to provide an all-encompassing Q&A platform for everyone.
 2. All behavior on the platform is anonymous from the user's perspective, so they can feel free to ask and answer questions as honestly as possible.
 
 By providing a community based approach to a Q&A forum, Community Q's makes it much easier to ask, find, and answer multiple related questions than many current platforms allow. Additionally, the anonymity amongst users means that they can be completely honest in both asking and answering questions, enabling everyone to gain the most information from the platform. In order to ensure this freedom of anonymity is not abused by malicious actors, the accounts associated with a given community, question, or answer are stored in Community Q's database for later reference to enable moderation of the platform. 
 
-This application was originally created as an end-of-course project for a Introduction to Web Development course that I took in Spring Quarter 2021, but it has since been updated to improve efficiency and documentation.
-
+This application was originally created as an end-of-course project for an Introduction to Web Development course that I took in Spring Quarter 2021, but it has since been updated to improve efficiency and documentation.
 
 ## Architecture Specification
 
@@ -86,6 +85,6 @@ All of the account, community, question, and answer information for the service 
     author: "string",           // Author of the answer (only for internal use)
     time: integer,              // Epoch time the question was posted
     body: "string",             // Content of the answer
-    score: integer              // Cummulative score of the question (upvotes - downvotes)   
+    score: integer              // Cumulative score of the question (upvotes - downvotes)   
 }
 ```
