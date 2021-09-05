@@ -10,7 +10,7 @@ class CommunityForm extends React.Component {
     }
 
     this.handleChange = this.handleChange.bind(this);
-    this.submitAnswer = this.submitAnswer.bind(this);
+    this.submit = this.submit.bind(this);
   }
 
   render() {
@@ -40,7 +40,7 @@ class CommunityForm extends React.Component {
           type="button"
           className="btn btn-primary mb-1"
           style={{width: "100%"}}
-          onClick={this.submitAnswer}
+          onClick={this.submit}
         >
           Submit
         </button>
@@ -62,7 +62,7 @@ class CommunityForm extends React.Component {
     })
   }
 
-  submitAnswer() {
+  submit() {
     if (this.state.communityTitle === "" || this.state.communityContent === "") {
       return;
     }
