@@ -17,9 +17,35 @@ class Sidebar extends React.Component {
   render() {
     return (
       <div style={{height: '100%', overflowY: "auto", padding: "5px"}}>
-        {this.genCommunityList()}
+        {this.props.tokens && (
+          <div className="mb-5">
+            <h5 className="mt-3">Your Communities</h5>
+            <ul className="list-group" >
+              {this.props.communities.map(comm => (
+                <a 
+                  key={comm._id}
+                  href="#" 
+                  className="list-group-item list-group-item-action" 
+                  id={comm._id}
+                  onClick={this.props.selectCommunity}
+                >
+                  {comm.name}
+                </a>
+              ))}
+            </ul>
+          </div>
+        )}
         <h5 className="mt-3">Explore</h5>
-        {this.genCommunityButton()}
+        {this.props.tokens && !this.state.showAddCommunity && (
+          <button
+            type="button"
+            className="btn btn-primary mb-2"
+            style={{width: "100%"}}
+            onClick={this.showAddCommunity}
+          >
+            Create a Community
+          </button>
+        )}
         <CommunityForm 
           show={this.state.showAddCommunity}
           close={this.hideAddCommunity}
@@ -43,54 +69,6 @@ class Sidebar extends React.Component {
     if (prevProps.tokens && prevProps.tokens !== this.props.tokens) {
       this.props.updateCommunities()
     }
-  }
-
-  genCommunityList() {
-    if(!this.props.tokens) {
-      return null;
-    }
-
-    const items = this.props.communities.map(comm => (
-      <a 
-        key={comm._id}
-        href="#" 
-        className="list-group-item list-group-item-action" 
-        id={comm._id}
-        onClick={this.props.selectCommunity}
-      >
-        {comm.name}
-      </a>
-    ))
-
-    return (
-      <div className="mb-5">
-        <h5 className="mt-3">Your Communities</h5>
-        <ul className="list-group" >
-          {items}
-        </ul>
-      </div>
-    )
-  }
-
-  genCommunityButton() {
-    if (!this.props.tokens) {
-      return null;
-    }
-
-    if(this.state.showAddCommunity) {
-      return null;
-    }
-
-    return (
-      <button
-        type="button"
-        className="btn btn-primary mb-2"
-        style={{width: "100%"}}
-        onClick={this.showAddCommunity}
-      >
-        Create a Community
-      </button>
-    );
   }
   
   showAddCommunity() {
@@ -151,8 +129,7 @@ class CommunityForm extends React.Component {
             placeholder="Description..."
             id="communityContent"
             onChange={this.handleChange}
-          >
-          </textarea>
+          />
         </div>
         <button 
           type="button"
