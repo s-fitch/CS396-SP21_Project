@@ -7,7 +7,7 @@ class Sidebar extends React.Component {
     super(props);
 
     this.state = {
-      showAddCommunity: false
+      addCommunity: false
     }
     this.showAddCommunity = this.showAddCommunity.bind(this);
     this.hideAddCommunity = this.hideAddCommunity.bind(this);
@@ -36,7 +36,13 @@ class Sidebar extends React.Component {
           </div>
         )}
         <h5 className="mt-3">Explore</h5>
-        {this.props.tokens && !this.state.showAddCommunity && (
+        {this.props.tokens && ((this.state.addCommunity) ? (
+          <CommunityForm 
+            close={this.hideAddCommunity}
+            finished={this.finishedAddCommunity}
+            tokens={this.props.tokens}
+          />
+        ) : (
           <button
             type="button"
             className="btn btn-primary mb-2"
@@ -45,13 +51,7 @@ class Sidebar extends React.Component {
           >
             Create a Community
           </button>
-        )}
-        <CommunityForm 
-          show={this.state.showAddCommunity}
-          close={this.hideAddCommunity}
-          finished={this.finishedAddCommunity}
-          tokens={this.props.tokens}
-        />
+        ))}
         <CommunitySearch 
           selectCommunity={this.props.selectCommunity}
         />        
@@ -73,13 +73,13 @@ class Sidebar extends React.Component {
   
   showAddCommunity() {
     this.setState({
-      showAddCommunity: true
+      addCommunity: true
     })
   }
   
   hideAddCommunity() {
     this.setState({
-      showAddCommunity: false
+      addCommunity: false
     })
   }
   
