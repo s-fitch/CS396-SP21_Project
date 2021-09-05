@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/s-fitch/CS396-SP21_Project.git"
+    "url": "git+https://github.com/s-fitch/community-qs.git"
   },
   "author": "Spencer Fitch",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/s-fitch/CS396-SP21_Project/issues"
+    "url": "https://github.com/s-fitch/community-qs/issues"
   },
-  "homepage": "https://github.com/s-fitch/CS396-SP21_Project#readme",
+  "homepage": "https://github.com/s-fitch/community-qs/#readme",
   "dependencies": {
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
