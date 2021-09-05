@@ -14,10 +14,6 @@ class CommunityForm extends React.Component {
   }
 
   render() {
-    if (!this.props.show) {
-      return null;
-    }
-
     return (
       <form className="container-fluid card" style={{width: "100%"}}>
         <div className="mb-3">
@@ -92,12 +88,7 @@ class CommunityForm extends React.Component {
             console.log(data);
             return;
           }
-          document.querySelector('#communityTitle').value = '';
-          document.querySelector('#communityContent').value = '';
-          this.setState({
-            communityTitle: '',
-            communityContent: ''
-          })
+          
           this.props.finished();
         });
   }
